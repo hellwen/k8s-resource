@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-centos
+spec:
+  containers:
+  - name: my-centos
+    image: centos:7
+    command:
+      - sleep
+      - "3600"
+    imagePullPolicy: IfNotPresent
+    securityContext:
+      privileged: true
