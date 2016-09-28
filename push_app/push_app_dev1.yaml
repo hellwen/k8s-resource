@@ -1,0 +1,46 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: push-app1
+  namespace: development
+  labels:
+    app: push-app1
+    kubernetes.io/cluster-service: "true"
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: push
+    spec:
+      containers:
+      - name: push-coment
+        image: 10.0.12.203:32000/centos7:0.1
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 1000Mi
+        ports:
+        - containerPort: 22
+        - containerPort: 50000
+        - containerPort: 50001
+        - containerPort: 50002
+        - containerPort: 50003
+        - containerPort: 50004
+        - containerPort: 50005
+        - containerPort: 50006
+        - containerPort: 50007
+        - containerPort: 50008
+        securityContext:
+          privileged: true
+        env:
+        - name: AUTHORIZED_KEYS
+          value: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCwUOUP6vVEeELZNKKm9mNPP2wl6tWjGfqJPHsfRuasa1uRGtWqgd2TbHqGc0tCUkqKivATVjgiGy2he/dwEoth2R3+2FdLSISv1l5acQnlhxxo79vA2gOa7dcoCInF0ajklDD/01f3QDyJ7qSmMLEMo5cYBkkN1KqujJkvx3CsiAVrUxseH3XhbCavlBlYpB/1QVOc8RKeEnhMSTJzW3tINRyLv8a3qh7O9kOKfzqKXwPOEYx+Ich3psvzcmslNxpX3b/4qEf0fLKba+IxrgNAXn/SJg9RIsxotLrIlRFWozWF+KYZf0NKuhF2kbzcTWgDUJAB6Z+3zsM1Sz3qZLkz k8s@k8s_m.kubernetes.com,ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDC9MnbINKNwIgu/UqUtsMjjxmnpzowmNbNC0H57jogjK8bvVoSn0Gz0mPw7oaGUD6OFmrFosXrDHhz50ctLrJ6KfRnNWqRQeMzYRN/t3ZXUDCnS9Cz18m+CdDSWVBrOVwbShCnJyUk1+z7bNcQ20O+uFe118+YWP4VWKQE94SBLyerqYVeyA4u6nRbI4olzxVCTx5OuFBDVy9v1AYmEN4kdt2XBecnS14HcKI1kexJL2gclQIX9rEkqOrGHW8CjS6MtRGD64S+KwkTUEb45Ivu93oTfEOzWplLxNcjJsit8vwmZ/hDd0wf82yfEQl9/Wz/QZ3x91xFgexy0kMkRGvP jun.chen@zeusis.com"
+        volumeMounts:
+        - name: log-store
+          mountPath: /data
+      volumes:
+      - name: log-store
+        persistentVolumeClaim:
+          claimName: push-app-pvc
+

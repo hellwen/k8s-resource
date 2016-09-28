@@ -1,0 +1,28 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: push-app-pvc
+  namespace: development
+  labels:
+    kubernetes.io/cluster-service: "true"
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 30G
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: push-app-pv
+  labels:
+    kubernetes.io/cluster-service: "true"
+spec:
+  capacity:
+    storage: 30G
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    server: 10.0.12.204
+    path: "/data/push-app-pv"
