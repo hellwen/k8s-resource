@@ -1,4 +1,4 @@
-FROM centos:7
+FROM 10.0.12.203:32000/centos:7
 MAINTAINER hellwen wu <hellwen.wu@gmail.com>
 
 # 163 yum repos

@@ -9,6 +9,7 @@ $HADOOP_PREFIX/sbin/mr-jobhistory-daemon.sh start historyserver
 echo "---------------------------"
 echo "test"
 echo "---------------------------"
+$HADOOP_PREFIX/bin/hdfs dfs -mkdir -p /user/root
 $HADOOP_PREFIX/bin/hdfs dfs -ls /
 
 #$HADOOP_PREFIX/bin/hdfs dfs -put $HADOOP_PREFIX/etc/hadoop/ input
