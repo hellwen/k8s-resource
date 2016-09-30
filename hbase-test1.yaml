@@ -28,7 +28,7 @@ spec:
     spec:
       containers:
       - name: hbase-test1
-        image: 10.0.12.203:32000/hadoop-2.7:0.1
+        image: 10.0.12.203:32000/hadoop-2.7
         #imagePullPolicy: IfNotPresent
         resources:
           limits:
@@ -58,6 +58,7 @@ spec:
         - containerPort: 8040
         - containerPort: 8042
         - containerPort: 8088
+        #jobhistory
         - containerPort: 10020
         - containerPort: 19888
         # hbase

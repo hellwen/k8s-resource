@@ -35,7 +35,7 @@ spec:
     spec:
       containers:
       - name: push-coment
-        image: 10.0.12.203:32000/centos7:0.1
+        image: 10.0.12.203:32000/centos7
         resources:
           limits:
             cpu: 500m
