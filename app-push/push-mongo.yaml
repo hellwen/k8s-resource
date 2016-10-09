@@ -1,0 +1,48 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: push-mongo
+  namespace: development
+  labels:
+    type: push-mongo
+spec:
+  ports:
+  - port: 2122
+    name: ssh
+  - port: 27017
+    name: mongo
+  selector:
+    type: push-mongo
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: push-mongo
+  namespace: development
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        type: push-mongo
+    spec:
+      nodeSelector:
+        type: virtual
+      containers:
+      - name: push-mongo
+        image: 10.0.12.203:32000/mongo:3.2.001
+        imagePullPolicy: Always
+        resources:
+          limits:
+            cpu: 500m
+            memory: 1000Mi
+        ports:
+        # ssh
+        - containerPort: 2122
+        # mongo
+        - containerPort: 27017
+        securityContext:
+          privileged: true
+        env:
+        - name: AUTHORIZED_KEYS
+          value: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCwUOUP6vVEeELZNKKm9mNPP2wl6tWjGfqJPHsfRuasa1uRGtWqgd2TbHqGc0tCUkqKivATVjgiGy2he/dwEoth2R3+2FdLSISv1l5acQnlhxxo79vA2gOa7dcoCInF0ajklDD/01f3QDyJ7qSmMLEMo5cYBkkN1KqujJkvx3CsiAVrUxseH3XhbCavlBlYpB/1QVOc8RKeEnhMSTJzW3tINRyLv8a3qh7O9kOKfzqKXwPOEYx+Ich3psvzcmslNxpX3b/4qEf0fLKba+IxrgNAXn/SJg9RIsxotLrIlRFWozWF+KYZf0NKuhF2kbzcTWgDUJAB6Z+3zsM1Sz3qZLkz k8s@k8s_m.kubernetes.com,ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCqQR8+l71l7XFLaKfylK9u9goEYQjy6KW1TXY6wQCzIk2hNpUBzHdca5MLf70nrKl7qD/bFGXtC/W1qIYhayG2lCsfHZTBWQ665zlbxRvxwxPYovFeIE1+wG4WoUMa++oOUu97nqzOA8SA/gh14rj/poco5H4JUtdbbwBFIW8/9pchRSRhwKV7UdHj/kufeAAoE05y4s6ioJES1VOsnGUP6utwePUSD2pygslAZde8o1e5/q95LvGI7xCzQgV73U72Wp7T7Ri0YXobDfYfcVpcqPngqb6uAy6mpWX1kDT2LXDxn8kw7Sd2YIgLva4Xn6R8Jxa4jRVlSVpOmdmEaXNt k8s@k8s_n1.kubernetes.com"

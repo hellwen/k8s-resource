@@ -1,0 +1,81 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: push-comet
+  namespace: development
+  labels:
+    system: push
+    app: push-comet
+spec:
+  type: NodePort
+  ports:
+  - port: 50000
+    nodePort: 20000
+    name: tcp
+  selector:
+    system: push
+    app: push-comet
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: push-comet-inner
+  namespace: development
+  labels:
+    system: push
+    app: push-comet-inner
+spec:
+  ports:
+  - port: 50001
+    name: websocket
+  - port: 50002
+    name: rpc
+  - port: 50003
+    name: tcp
+  selector:
+    system: push
+    app: push-comet
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: push-comet
+  namespace: development
+  labels:
+    system: push
+    app: push-comet
+    kubernetes.io/cluster-service: "true"
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        system: push
+        app: push-comet
+    spec:
+      nodeSelector:
+        type: virtual
+      containers:
+      - name: push-comet
+        image: 10.0.12.203:32000/push-comet:v1
+        imagePullPolicy: Always
+        resources:
+          limits:
+            cpu: 500m
+            memory: 500Mi
+        ports:
+        - containerPort: 22
+          name: ssh
+        - containerPort: 50004
+          name: rpc
+        - containerPort: 50005
+          name: tcp
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: log-store
+          mountPath: /data
+      volumes:
+      - name: log-store
+        persistentVolumeClaim:
+          claimName: push-app-pvc
