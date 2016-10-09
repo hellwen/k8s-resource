@@ -7,17 +7,17 @@ spec:
     type: virtual
   containers:
   - name: my-centos
-    image: 10.0.12.203:32000/centos7:0.2
+    image: 10.0.12.203:32000/centos:7-onbuild.001
     imagePullPolicy: Always
-    command:
-    - /init.sh
+    #command:
+    #- /init.sh
     securityContext:
       privileged: true
     ports:
     - containerPort: 2122
     volumeMounts:
     - name: ssh-key
-      mountPath: /root/.ssh
+      mountPath: /.ssh
       readOnly: true
   volumes:
   - name: ssh-key
