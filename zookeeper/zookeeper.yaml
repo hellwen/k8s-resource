@@ -1,35 +1,42 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: push-zookeeper
+  name: zookeeper
   namespace: development
   labels:
-    type: push-zookeeper
+    type: zookeeper
 spec:
   ports:
   - port: 2122
     name: ssh
   - port: 2181
     name: zk
+  - port: 2191
+    name: peer
+  - port: 2192
+    name: leader-election
   selector:
-    type: push-zookeeper
+    type: zk
 ---
-apiVersion: extensions/v1beta1
-kind: Deployment
+apiVersion: apps/v1alpha1
+kind: PetSet
 metadata:
-  name: push-zookeeper
+  name: zk
   namespace: development
 spec:
-  replicas: 1
+  replicas: 3
+  serviceName: "zookeeper"
   template:
     metadata:
+      annotations:
+        pod.alpha.kubernetes.io/initialized: "true"
       labels:
-        type: push-zookeeper
+        type: zk
     spec:
       nodeSelector:
         type: virtual
       containers:
-      - name: push-zookeeper
+      - name: zk
         image: 10.0.12.203:32000/zookeeper:3.4.9.001
         imagePullPolicy: Always
         resources:
@@ -41,6 +48,29 @@ spec:
         - containerPort: 2122
         # zk
         - containerPort: 2181
+        # peer
+        - containerPort: 2191
+        # leader-election
+        - containerPort: 2192
+        args:
+        - -d
         env:
-        - name: AUTHORIZED_KEYS
-          value: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCwUOUP6vVEeELZNKKm9mNPP2wl6tWjGfqJPHsfRuasa1uRGtWqgd2TbHqGc0tCUkqKivATVjgiGy2he/dwEoth2R3+2FdLSISv1l5acQnlhxxo79vA2gOa7dcoCInF0ajklDD/01f3QDyJ7qSmMLEMo5cYBkkN1KqujJkvx3CsiAVrUxseH3XhbCavlBlYpB/1QVOc8RKeEnhMSTJzW3tINRyLv8a3qh7O9kOKfzqKXwPOEYx+Ich3psvzcmslNxpX3b/4qEf0fLKba+IxrgNAXn/SJg9RIsxotLrIlRFWozWF+KYZf0NKuhF2kbzcTWgDUJAB6Z+3zsM1Sz3qZLkz k8s@k8s_m.kubernetes.com,ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCqQR8+l71l7XFLaKfylK9u9goEYQjy6KW1TXY6wQCzIk2hNpUBzHdca5MLf70nrKl7qD/bFGXtC/W1qIYhayG2lCsfHZTBWQ665zlbxRvxwxPYovFeIE1+wG4WoUMa++oOUu97nqzOA8SA/gh14rj/poco5H4JUtdbbwBFIW8/9pchRSRhwKV7UdHj/kufeAAoE05y4s6ioJES1VOsnGUP6utwePUSD2pygslAZde8o1e5/q95LvGI7xCzQgV73U72Wp7T7Ri0YXobDfYfcVpcqPngqb6uAy6mpWX1kDT2LXDxn8kw7Sd2YIgLva4Xn6R8Jxa4jRVlSVpOmdmEaXNt k8s@k8s_n1.kubernetes.com"
+        - name: ZK_CLUSTER_DNS
+          value: "zookeeper.development.svc.zeusis.com"
+        - name: ZK_SERVER_NAME
+          value: "zk"
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        volumeMounts:
+        - name: ssh-key
+          mountPath: /.ssh
+          readOnly: true
+      volumes:
+      - name: ssh-key
+        secret:
+          secretName: ssh-key 
+          items:
+          - key: authorized-keys
+            path: authorized_keys
