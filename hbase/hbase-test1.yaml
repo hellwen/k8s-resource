@@ -1,0 +1,86 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: hbase-test1
+  namespace: default
+  labels:
+    type: hbase-test1
+spec:
+  ports:
+  - port: 2122
+    targetPort: 2122
+  selector:
+    type: hbase-test1
+---
+apiVersion: extensions/v1beta1
+kind: ReplicaSet
+metadata:
+  name: hbase-test1
+  namespace: default
+  labels:
+    type: hbase-test1
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        type: hbase-test1
+    spec:
+      containers:
+      - name: hbase-test1
+        image: 10.0.12.203:32000/hadoop-2.7
+        #imagePullPolicy: IfNotPresent
+        resources:
+          limits:
+            cpu: 3000m
+            memory: 2000Mi
+        ports:
+        # hdfs
+        - containerPort: 50010
+        - containerPort: 50020
+        - containerPort: 50070
+        - containerPort: 50470
+        - containerPort: 50075
+        - containerPort: 50475
+        - containerPort: 50090
+        - containerPort: 8019
+        - containerPort: 8020
+        - containerPort: 8480
+        - containerPort: 8485
+        # mapred
+        - containerPort: 10020
+        - containerPort: 19888
+        # yarn
+        - containerPort: 8030
+        - containerPort: 8031
+        - containerPort: 8032
+        - containerPort: 8033
+        - containerPort: 8040
+        - containerPort: 8042
+        - containerPort: 8088
+        #jobhistory
+        - containerPort: 10020
+        - containerPort: 19888
+        # hbase
+        - containerPort: 60000
+        - containerPort: 60010
+        - containerPort: 60020
+        - containerPort: 60030
+        - containerPort: 8080
+        - containerPort: 16010
+        - containerPort: 16020
+        - containerPort: 16030
+        # Zookeeper
+        - containerPort: 2888
+        - containerPort: 3888
+        - containerPort: 2181
+        # hive
+        - containerPort: 9083
+        - containerPort: 10000
+        # ssh
+        - containerPort: 2122
+        securityContext:
+          privileged: true
+        env:
+        - name: AUTHORIZED_KEYS
+          value: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCwUOUP6vVEeELZNKKm9mNPP2wl6tWjGfqJPHsfRuasa1uRGtWqgd2TbHqGc0tCUkqKivATVjgiGy2he/dwEoth2R3+2FdLSISv1l5acQnlhxxo79vA2gOa7dcoCInF0ajklDD/01f3QDyJ7qSmMLEMo5cYBkkN1KqujJkvx3CsiAVrUxseH3XhbCavlBlYpB/1QVOc8RKeEnhMSTJzW3tINRyLv8a3qh7O9kOKfzqKXwPOEYx+Ich3psvzcmslNxpX3b/4qEf0fLKba+IxrgNAXn/SJg9RIsxotLrIlRFWozWF+KYZf0NKuhF2kbzcTWgDUJAB6Z+3zsM1Sz3qZLkz k8s@k8s_m.kubernetes.com,ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCqQR8+l71l7XFLaKfylK9u9goEYQjy6KW1TXY6wQCzIk2hNpUBzHdca5MLf70nrKl7qD/bFGXtC/W1qIYhayG2lCsfHZTBWQ665zlbxRvxwxPYovFeIE1+wG4WoUMa++oOUu97nqzOA8SA/gh14rj/poco5H4JUtdbbwBFIW8/9pchRSRhwKV7UdHj/kufeAAoE05y4s6ioJES1VOsnGUP6utwePUSD2pygslAZde8o1e5/q95LvGI7xCzQgV73U72Wp7T7Ri0YXobDfYfcVpcqPngqb6uAy6mpWX1kDT2LXDxn8kw7Sd2YIgLva4Xn6R8Jxa4jRVlSVpOmdmEaXNt k8s@k8s_n1.kubernetes.com"

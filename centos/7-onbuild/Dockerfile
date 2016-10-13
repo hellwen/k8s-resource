@@ -10,8 +10,8 @@ RUN cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 # install dev tools
 RUN yum clean all; \
     rpm --rebuilddb; \
-    yum install -y which tar sudo openssh-server openssh-clients rsync epel-release; \
-    yum install -y pwgen net-tools sysstat
+    yum install -y which tar sudo openssh-server openssh-clients epel-release; \
+    yum install -y pwgen rsync net-tools sysstat bind-utils
 
 # passwordless ssh
 RUN rm -f /etc/ssh/ssh_host_ecdsa_key /etc/ssh/ssh_host_rsa_key && \
@@ -32,10 +32,12 @@ RUN yum install -y xterm && \
     echo "set -o vi" >> /etc/profile && \
     echo "export TERM=xterm" >> /etc/profile
 
+ADD peer-finder /peer-finder
 ADD init.sh /init.sh
 ADD set_root_pw.sh /set_root_pw.sh
-RUN chmod +x /init.sh
-RUN chmod +x /set_root_pw.sh
+RUN chmod +x /peer-finder && \
+    chmod +x /init.sh && \
+    chmod +x /set_root_pw.sh
 
 ENTRYPOINT ["/init.sh"]
 

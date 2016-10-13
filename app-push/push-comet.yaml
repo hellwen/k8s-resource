@@ -23,8 +23,9 @@ metadata:
   namespace: development
   labels:
     system: push
-    app: push-comet-inner
+    app: push-comet
 spec:
+  clusterIP: None
   ports:
   - port: 50001
     name: websocket
@@ -33,25 +34,23 @@ spec:
   - port: 50003
     name: tcp
   selector:
-    system: push
     app: push-comet
 ---
-apiVersion: extensions/v1beta1
-kind: Deployment
+apiVersion: apps/v1alpha1
+kind: PetSet
 metadata:
   name: push-comet
   namespace: development
-  labels:
-    system: push
-    app: push-comet
-    kubernetes.io/cluster-service: "true"
 spec:
-  replicas: 1
+  replicas: 2
+  serviceName: push-comet-inner
   template:
     metadata:
       labels:
         system: push
         app: push-comet
+      annotations:
+        pod.alpha.kubernetes.io/initialized: "true"
     spec:
       nodeSelector:
         type: virtual
@@ -61,7 +60,7 @@ spec:
         imagePullPolicy: Always
         resources:
           limits:
-            cpu: 500m
+            cpu: 300m
             memory: 500Mi
         ports:
         - containerPort: 22
@@ -70,12 +69,3 @@ spec:
           name: rpc
         - containerPort: 50005
           name: tcp
-        securityContext:
-          privileged: true
-        volumeMounts:
-        - name: log-store
-          mountPath: /data
-      volumes:
-      - name: log-store
-        persistentVolumeClaim:
-          claimName: push-app-pvc

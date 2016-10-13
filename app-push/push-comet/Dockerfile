@@ -4,6 +4,7 @@ RUN mkdir -p /go/bin
 COPY . /go/bin
 WORKDIR /go/bin
 
-# this will ideally be built by the ONBUILD below ;)
-CMD ["push-comet", "-c", "comet-example.conf"]
+ADD bootstrap.sh /bootstrap.sh
+RUN chmod +x /bootstrap.sh
 
+CMD ["/bootstrap.sh"]

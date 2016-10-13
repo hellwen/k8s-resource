@@ -23,33 +23,32 @@ metadata:
   namespace: development
   labels:
     system: push
-    app: push-logic-inner
+    app: push-logic
 spec:
+  clusterIP: None
   ports:
   - port: 50007
     name: rpc
   - port: 50008
     name: tcp
   selector:
-    system: push
     app: push-logic
 ---
-apiVersion: extensions/v1beta1
-kind: Deployment
+apiVersion: apps/v1alpha1
+kind: PetSet
 metadata:
   name: push-logic
   namespace: development
-  labels:
-    system: push
-    app: push-logic
-    kubernetes.io/cluster-service: "true"
 spec:
-  replicas: 1
+  replicas: 2
+  serviceName: "push-logic-inner"
   template:
     metadata:
       labels:
         system: push
         app: push-logic
+      annotations:
+        pod.alpha.kubernetes.io/initialized: "true"
     spec:
       nodeSelector:
         type: virtual
@@ -59,7 +58,7 @@ spec:
         imagePullPolicy: Always
         resources:
           limits:
-            cpu: 500m
+            cpu: 300m
             memory: 500Mi
         ports:
         - containerPort: 50006
@@ -68,12 +67,3 @@ spec:
           name: rpc
         - containerPort: 50008
           name: tcp
-        securityContext:
-          privileged: true
-        volumeMounts:
-        - name: log-store
-          mountPath: /data
-      volumes:
-      - name: log-store
-        persistentVolumeClaim:
-          claimName: push-app-pvc

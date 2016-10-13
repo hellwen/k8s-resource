@@ -3,10 +3,6 @@ kind: Deployment
 metadata:
   name: push-downlinkmsg
   namespace: development
-  labels:
-    system: push
-    app: push-downlinkms
-    kubernetes.io/cluster-service: "true"
 spec:
   replicas: 1
   template:
@@ -23,7 +19,7 @@ spec:
         imagePullPolicy: Always
         resources:
           limits:
-            cpu: 500m
+            cpu: 300m
             memory: 500Mi
         ports:
         - containerPort: 22

@@ -7,6 +7,7 @@ metadata:
     system: push
     app: push-router
 spec:
+  clusterIP: None
   ports:
   - port: 50004
     targetPort: 50004
@@ -15,22 +16,20 @@ spec:
     targetPort: 50005
     name: tcp
   selector:
-    system: push
     app: push-router
 ---
-apiVersion: extensions/v1beta1
-kind: Deployment
+apiVersion: apps/v1alpha1
+kind: PetSet
 metadata:
   name: push-router
   namespace: development
-  labels:
-    system: push
-    app: push-router
-    kubernetes.io/cluster-service: "true"
 spec:
-  replicas: 1
+  replicas: 3
+  serviceName: "push-router"
   template:
     metadata:
+      annotations:
+        pod.alpha.kubernetes.io/initialized: "true"
       labels:
         system: push
         app: push-router
@@ -43,7 +42,7 @@ spec:
         imagePullPolicy: Always
         resources:
           limits:
-            cpu: 500m
+            cpu: 300m
             memory: 500Mi
         ports:
         - containerPort: 22
@@ -52,12 +51,3 @@ spec:
           name: rpc
         - containerPort: 50005
           name: tcp
-        securityContext:
-          privileged: true
-        volumeMounts:
-        - name: log-store
-          mountPath: /data
-      volumes:
-      - name: log-store
-        persistentVolumeClaim:
-          claimName: push-app-pvc

@@ -1,1 +1,3 @@
-kubectl create secret generic ssh-key --from-file=./authorized-keys
+kubectl create secret generic ssh-key --from-file=./authorized-keys --from-file=./id-rsa --from-file=./id-rsa.pub
+
+kubectl delete secret generic ssh-key

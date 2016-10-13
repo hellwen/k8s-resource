@@ -10,8 +10,11 @@ echo "========================================================================"
 echo "========================================================================"
 echo "init & start zookeeper"
 echo "========================================================================"
-/usr/local/zk_init.sh
-/usr/local/zk_start.sh
+mkdir -p /data/zk/data
+mkdir -p /data/zk/log
+
+#/peer-finder -on-change=/usr/local/on-change.sh -on-start=/usr/local/on-start.sh -service=zookeeper -ns=development
+/peer-finder -on-change=/usr/local/on-change.sh -on-start=/usr/local/on-change.sh -service=zookeeper -ns=development
 
 echo "---------------------------"
 echo "running..."

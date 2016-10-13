@@ -4,8 +4,9 @@ metadata:
   name: zookeeper
   namespace: development
   labels:
-    type: zookeeper
+    app: zookeeper
 spec:
+  clusterIP: None
   ports:
   - port: 2122
     name: ssh
@@ -16,7 +17,7 @@ spec:
   - port: 2192
     name: leader-election
   selector:
-    type: zk
+    app: zk
 ---
 apiVersion: apps/v1alpha1
 kind: PetSet
@@ -31,10 +32,11 @@ spec:
       annotations:
         pod.alpha.kubernetes.io/initialized: "true"
       labels:
-        type: zk
+        app: zk
     spec:
       nodeSelector:
         type: virtual
+      terminationGracePeriodSeconds: 0
       containers:
       - name: zk
         image: 10.0.12.203:32000/zookeeper:3.4.9.001
@@ -67,6 +69,8 @@ spec:
         - name: ssh-key
           mountPath: /.ssh
           readOnly: true
+#        - name: zk-data
+#          mountPath: /data
       volumes:
       - name: ssh-key
         secret:
@@ -74,3 +78,12 @@ spec:
           items:
           - key: authorized-keys
             path: authorized_keys
+#  volumeClaimTemplates:
+#  - metadata:
+#      name: zk-data
+#    spec:
+#      accessModes:
+#      - ReadWriteOnce
+#      resources:
+#        requests:
+#          storage: 1Gi
