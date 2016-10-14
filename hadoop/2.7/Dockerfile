@@ -34,8 +34,6 @@ RUN chmod a+x /bootstrap.sh
 
 ENTRYPOINT ["/bootstrap.sh"]
 
-# ssh ports
-EXPOSE 2122
 # Hdfs ports
 EXPOSE 50010 50020 50070 50470 50075 50475 50090 8020 8019 8485 8480
 # Mapred ports

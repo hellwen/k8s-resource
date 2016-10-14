@@ -25,7 +25,7 @@ metadata:
   name: hadoop
   namespace: development
 spec:
-  replicas: 2
+  replicas: 4
   serviceName: hadoop
   template:
     metadata:

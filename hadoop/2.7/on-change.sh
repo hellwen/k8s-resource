@@ -16,8 +16,15 @@ done
 
 # replication the replicas
 echo "########### replicas modifiy"
-REPLICAS=${#PEERS[@]}
-sed -i "/<name>dfs.replication/ s:.*:<name>dfs.replication<\/name><value>${REPLICAS}<\/value>:" $HDFS_SITE
+replicas=${#PEERS[@]}
+if [ $replicas -ge 4 ];then
+    sed -i "/<name>dfs.replication/ s:.*:<name>dfs.replication<\/name><value>3<\/value>:" $HDFS_SITE
+elif [ $replicas -ge 2 ];then
+    let rep=$replicas-1
+    sed -i "/<name>dfs.replication/ s:.*:<name>dfs.replication<\/name><value>${rep}<\/value>:" $HDFS_SITE
+else
+    sed -i "/<name>dfs.replication/ s:.*:<name>dfs.replication<\/name><value>1<\/value>:" $HDFS_SITE
+fi
 
 MASTER_DNS=${PEERS[0]}
 MASTER=${MASTER_DNS%%.*}

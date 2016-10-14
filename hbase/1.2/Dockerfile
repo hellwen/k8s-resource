@@ -1,67 +1,5 @@
-# Creates pseudo distributed hadoop 2.7.1
-#
-# docker build -t sequenceiq/hadoop .
-
-FROM 10.0.12.203:32000/centos:7
+FROM 10.0.12.203:32000/hadoop:2.7.001
 MAINTAINER Hellwen <hellwen.wu@gmail.com>
-
-# 163 yum repos
-ADD CentOS-Base-163.repo /etc/yum.repos.d/CentOS-Base.repo
-
-# time zone
-RUN cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
-
-# install dev tools
-RUN yum clean all; \
-    rpm --rebuilddb; \
-    yum install -y which tar sudo openssh-server openssh-clients rsync epel-release; \
-    yum install -y pwgen
-# update libselinux. see https://github.com/sequenceiq/hadoop-docker/issues/14
-RUN yum update -y libselinux
-
-# passwordless ssh
-RUN rm -f /etc/ssh/ssh_host_ecdsa_key /etc/ssh/ssh_host_rsa_key && \
-    ssh-keygen -q -N "" -t dsa -f /etc/ssh/ssh_host_ecdsa_key && \
-    ssh-keygen -q -N "" -t rsa -f /etc/ssh/ssh_host_rsa_key && \
-    ssh-keygen -q -N "" -t rsa -f /root/.ssh/id_rsa && \
-    cp /root/.ssh/id_rsa.pub /root/.ssh/authorized_keys && \
-    # sed  -i "/^[^#]*UsePAM/ s/.*/#&/"  /etc/ssh/sshd_config && \
-    echo "UsePAM no" >> /etc/ssh/sshd_config && \
-    echo "Port 2122" >> /etc/ssh/sshd_config
-
-
-# install term
-RUN yum install -y xterm && \
-    echo "# add by init" >> /etc/profile && \
-    echo "set -o vi" >> /etc/profile && \
-    echo "export TERM=xterm" >> /etc/profile
-
-## begin hadoop
-
-# install package
-ADD tarballs/jre-8u101-linux-x64.tar.gz /usr/local
-ADD tarballs/hadoop-2.7.3.tar.gz /usr/local
-ADD tarballs/hbase-1.2.3-bin.tar.gz /usr/local
-
-# java
-RUN cd /usr/local && \
-    ln -s jre1.8.0_101 jre && \
-    echo "export JAVA_HOME=/usr/local/jre" >> /etc/profile && \
-    echo "export PATH=\$PATH:\$JAVA_HOME/bin" >> /etc/profile
-
-# hadoop
-ENV HADOOP_PREFIX /usr/local/hadoop
-
-RUN cd /usr/local && \
-    ln -s hadoop-2.7.3 hadoop && \
-    echo "export HADOOP_PREFIX=$HADOOP_PREFIX" >> /etc/profile && \
-    echo "export HADOOP_COMMON_HOME=$HADOOP_PREFIX" >> /etc/profile && \
-    echo "export HADOOP_HDFS_HOME=$HADOOP_PREFIX" >> /etc/profile && \
-    echo "export HADOOP_MAPRED_HOME=$HADOOP_PREFIX" >> /etc/profile && \
-    echo "export HADOOP_YARN_HOME=$HADOOP_PREFIX" >> /etc/profile && \
-    echo "export HADOOP_CONF_DIR=$HADOOP_PREFIX/etc/hadoop" >> /etc/profile && \
-    echo "export YARN_CONF_DIR=$HADOOP_PREFIX/etc/hadoop" >> /etc/profile && \
-    echo "export PATH=\$PATH:\$HADOOP_PREFIX/bin" >> /etc/profile
 
 # hbase
 RUN cd /usr/local && \
@@ -69,37 +7,20 @@ RUN cd /usr/local && \
     echo "export HBASE_HOME=/usr/local/hbase" >> /etc/profile && \
     echo "export PATH=\$PATH:\$HBASE_HOME/bin" >> /etc/profile
 
-# script
-ADD set_root_pw.sh /set_root_pw.sh
-ADD init.sh /init.sh
-ADD bootstrap.sh /bootstrap.sh
-RUN chmod a+x /init.sh && \
-    chmod a+x /set_root_pw.sh && \
-    chmod a+x /bootstrap.sh
-
-ADD init_hadoop.sh /usr/local/init_hadoop.sh
-ADD start_hadoop.sh /usr/local/start_hadoop.sh
-ADD stop_hadoop.sh /usr/local/stop_hadoop.sh
-
 ADD init_hbase.sh /usr/local/init_hbase.sh
 ADD start_hbase.sh /usr/local/start_hbase.sh
 ADD stop_hbase.sh /usr/local/stop_hbase.sh
 
 RUN chmod +x /usr/local/*.sh
 
+# script
+ADD bootstrap.sh /bootstrap.sh
+RUN chmod a+x /bootstrap.sh
 ENTRYPOINT ["/bootstrap.sh"]
 
-# Hdfs ports
-EXPOSE 50010 50020 50070 50470 50075 50475 50090 8020 8019 8485 8480
-# Mapred ports
-EXPOSE 10020 19888
-# Yarn ports
-EXPOSE 8030 8031 8032 8033 8040 8041 8042 8088 10020 19888
 # Hbase ports
 EXPOSE 60000 60010 60020 60030 8080 16010 16020 16030
 # zookeeper
 EXPOSE 2888 3888 2181
 # Hive ports
 EXPOSE 9083 10000
-# ssh ports
-EXPOSE 2122
