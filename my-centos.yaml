@@ -9,8 +9,8 @@ spec:
   - name: my-centos
     image: 10.0.12.203:32000/centos:7-onbuild.001
     imagePullPolicy: Always
-    #command:
-    #- /init.sh
+    args:
+    - -d
     securityContext:
       privileged: true
     ports:

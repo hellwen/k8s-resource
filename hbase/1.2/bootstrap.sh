@@ -2,31 +2,40 @@
 
 source /etc/profile
 
-echo "========================================================================"
-echo "init os"
-echo "========================================================================"
+echo "########### os init"
 /init.sh
 
-echo "========================================================================"
-echo "init & start hadoop"
-echo "========================================================================"
-/usr/local/init_hadoop.sh
-/usr/local/start_hadoop.sh
+echo "########### hadoop init"
+cd /root/.ssh
+cat /.ssh/id_rsa > id_rsa
+cat /.ssh/id_rsa.pub > id_rsa.pub
 
-echo "========================================================================"
-echo "Start sshd"
-echo "========================================================================"
-/usr/sbin/sshd
+mkdir -p /data/dhfs/namenode
+mkdir -p /data/dhfs/datanode
 
-echo "========================================================================"
-echo "init & start hbase"
-echo "========================================================================"
-/usr/local/init_hbase.sh
-/usr/local/start_hbase.sh
+/usr/local/hadoop-init.sh
 
-echo "---------------------------"
-echo "go"
-echo "---------------------------"
+echo "########### zk init"
+mkdir -p /data/zk/data
+mkdir -p /data/zk/log
+
+echo "########### hdfs format"
+$HADOOP_HOME/bin/hdfs namenode -format
+
+echo "########### hbase init"
+/usr/local/hbase-init.sh
+/usr/local/hbase-start.sh
+
+echo "########### hive init"
+/usr/local/hive-init.sh
+
+echo "########### spark init"
+/usr/local/spark-init.sh
+
+echo "########### peer-finder running..."
+/peer-finder -on-change=/usr/local/on-change.sh -on-start=/usr/local/on-change.sh -service=$SERVICE -ns=$NAMESPACE
+
+echo "########### running..."
 if [[ $1 == "-d" ]]; then
   while true; do sleep 1000; done
 fi

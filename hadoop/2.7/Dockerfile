@@ -30,7 +30,7 @@ RUN chmod +x /usr/local/*.sh
 
 # script
 ADD bootstrap.sh /bootstrap.sh
-RUN chmod a+x /bootstrap.sh
+RUN chmod +x /bootstrap.sh
 
 ENTRYPOINT ["/bootstrap.sh"]
 

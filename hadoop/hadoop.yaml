@@ -88,6 +88,8 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: status.podIP
+        args:
+        - -d
         volumeMounts:
         - name: ssh-key
           mountPath: /.ssh

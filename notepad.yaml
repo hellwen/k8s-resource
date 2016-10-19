@@ -1,0 +1,61 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: notepad
+  namespace: development
+  labels:
+    app: notepad
+spec:
+  selector:
+    app: notepad
+  type: NodePort
+  ports:
+  - name: ssh
+    port: 2122
+    nodePort: 30010
+  - name: notepad
+    port: 5232
+    nodePort: 30011
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: notepad
+  namespace: development
+  labels:
+    app: notepad
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: notepad
+    spec:
+      nodeSelector:
+        type: virtual
+      containers:
+      - name: notepad
+        image: 10.0.12.203:32000/centos:7.001
+        imagePullPolicy: Always
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 2000Mi
+        args:
+        - -d
+        securityContext:
+          privileged: true
+        ports:
+        - containerPort: 2122
+        - containerPort: 5232
+        volumeMounts:
+        - name: ssh-key
+          mountPath: /.ssh
+          readOnly: true
+      volumes:
+      - name: ssh-key
+        secret:
+          secretName: ssh-key 
+          items:
+          - key: authorized-keys
+            path: authorized_keys
