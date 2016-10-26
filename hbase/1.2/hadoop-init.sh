@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#MASTER=${HOSTNAME}
+#MASTER=${SERVICE}-0
 MASTER=${SERVICE}-0.${SERVICE}.${NAMESPACE}.svc.zeusis.com
 
 cat << EOF > $HADOOP_CONF_DIR/core-site.xml
@@ -62,5 +62,5 @@ cat << EOF > $HADOOP_CONF_DIR/slaves
 ${MASTER}
 EOF
 
-sed -i '/^export JAVA_HOME/ s:.*:export JAVA_HOME=/usr/local/jre\nexport HADOOP_PREFIX=/usr/local/hadoop\nexport HADOOP_HOME=/usr/local/hadoop\n:' $HADOOP_PREFIX/etc/hadoop/hadoop-env.sh
-sed -i '/^export HADOOP_CONF_DIR/ s:.*:export HADOOP_CONF_DIR=/usr/local/hadoop/etc/hadoop/:' $HADOOP_PREFIX/etc/hadoop/hadoop-env.sh
+sed -i '/^export JAVA_HOME/ s:.*:export JAVA_HOME=/usr/local/jre\nexport HADOOP_PREFIX=/usr/local/hadoop\nexport HADOOP_HOME=/usr/local/hadoop\n:' $HADOOP_HOME/etc/hadoop/hadoop-env.sh
+sed -i '/^export HADOOP_CONF_DIR/ s:.*:export HADOOP_CONF_DIR=/usr/local/hadoop/etc/hadoop/:' $HADOOP_HOME/etc/hadoop/hadoop-env.sh

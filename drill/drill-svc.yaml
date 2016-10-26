@@ -8,16 +8,7 @@ metadata:
 spec:
   type: NodePort
   ports:
-  - port: 50070
-    name: hdfs
-    nodePort: 30005
-  - port: 16010
-    name: hbase
-    nodePort: 30006
-  - port: 8090
-    name: hbase-rest
-    nodePort: 30007
-  - port: 8046
+  - port: 8047
     name: drill
     nodePort: 30008
   selector:

@@ -1,4 +1,4 @@
-FROM 10.0.12.203:32000/jre:1.8.001
+FROM 10.0.12.207:32000/jre:1.8.001
 MAINTAINER Hellwen <hellwen.wu@gmail.com>
 
 # zookeeper

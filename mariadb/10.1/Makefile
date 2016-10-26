@@ -1,7 +1,7 @@
 all: push
 
 TAG = 10.1.001
-PREFIX = 10.0.12.203:32000/mariadb
+PREFIX = 10.0.12.207:32000/mariadb
 
 container:
 	docker build -t $(PREFIX):$(TAG) .

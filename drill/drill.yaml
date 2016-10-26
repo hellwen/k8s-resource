@@ -19,7 +19,7 @@ metadata:
   name: drill
   namespace: development
 spec:
-  replicas: 3
+  replicas: 2
   serviceName: drill
   template:
     metadata:
@@ -44,44 +44,6 @@ spec:
             cpu: 2000m
             memory: 4000Mi
         ports:
-        # hdfs
-        - containerPort: 50010
-        - containerPort: 50020
-        - containerPort: 50070
-        - containerPort: 50470
-        - containerPort: 50075
-        - containerPort: 50475
-        - containerPort: 50090
-        - containerPort: 8019
-        - containerPort: 8020
-        - containerPort: 8480
-        - containerPort: 8485
-        # mapred
-        - containerPort: 10020
-        - containerPort: 19888
-        # yarn
-        - containerPort: 8030
-        - containerPort: 8031
-        - containerPort: 8032
-        - containerPort: 8033
-        - containerPort: 8040
-        - containerPort: 8042
-        - containerPort: 8088
-        # jobhistory
-        - containerPort: 10020
-        - containerPort: 19888
-        # hbase
-        - containerPort: 16010
-        - containerPort: 16020
-        - containerPort: 16030
-        - containerPort: 60000
-        - containerPort: 60010
-        - containerPort: 60020
-        - containerPort: 60030
-        - containerPort: 8090
-        # hive
-        - containerPort: 9083
-        - containerPort: 10000
         # drill
         - containerPort: 31010
         - containerPort: 31011
@@ -100,6 +62,8 @@ spec:
           value: "development"
         - name: SERVICE
           value: "drill"
+        - name: HBASE_ZOOKEEPER_QUORUM
+          value: "hbase-0.hbase.development.svc.zeusis.com"
         - name: POD_IP
           valueFrom:
             fieldRef:

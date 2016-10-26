@@ -10,11 +10,9 @@ ADD tarballs/zookeeper-3.4.9.tar.gz           /usr/local
 ADD tarballs/hbase-1.2.3-bin.tar.gz           /usr/local
 
 # hadoop
-ENV HADOOP_PREFIX /usr/local/hadoop
 ENV HADOOP_HOME /usr/local/hadoop
 RUN cd /usr/local && \
     ln -s hadoop-2.7.3 hadoop && \
-    echo "export HADOOP_PREFIX=$HADOOP_PREFIX" >> /etc/profile && \
     echo "export HADOOP_HOME=$HADOOP_HOME" >> /etc/profile && \
     echo "export HADOOP_COMMON_HOME=\$HADOOP_HOME" >> /etc/profile && \
     echo "export HADOOP_HDFS_HOME=\$HADOOP_HOME" >> /etc/profile && \
@@ -35,8 +33,6 @@ RUN cd /usr/local && \
     echo "export ZK_HOME=$ZK_HOME" >> /etc/profile && \
     echo "export PATH=\$PATH:\$ZK_HOME/bin" >> /etc/profile
 
-ADD zk-init.sh  /usr/local/zk-init.sh
-
 # hbase
 ENV HBASE_HOME /usr/local/hbase
 RUN cd /usr/local && \
@@ -50,6 +46,7 @@ ADD hbase-start.sh /usr/local/hbase-start.sh
 ADD hbase-stop.sh  /usr/local/hbase-stop.sh
 
 # comm
+ADD on-init.sh    /usr/local/on-init.sh
 ADD on-change.sh  /usr/local/on-change.sh
 RUN chmod +x /usr/local/*.sh
 

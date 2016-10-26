@@ -34,12 +34,10 @@ spec:
       labels:
         app: zk
     spec:
-      nodeSelector:
-        type: virtual
       terminationGracePeriodSeconds: 0
       containers:
       - name: zk
-        image: 10.0.12.203:32000/zookeeper:3.4.9.001
+        image: 10.0.12.207:32000/zookeeper:3.4.9.001
         imagePullPolicy: Always
         resources:
           limits:

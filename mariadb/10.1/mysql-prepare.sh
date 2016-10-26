@@ -36,11 +36,11 @@ echo $esql && mysql -u root mysql -e "${esql}"
 esql="set default role dba for dba_dean@localhost;"
 echo $esql && mysql -u root mysql -e "${esql}"
 
-esql="create user dba_dean@'10.0.%' identified by 'dba_dean';"
+esql="create user dba_dean@'%' identified by 'dba_dean';"
 echo $esql && mysql -u root mysql -e "${esql}"
-esql="grant dba to dba_dean@'10.0.%';"
+esql="grant dba to dba_dean@'%';"
 echo $esql && mysql -u root mysql -e "${esql}"
-esql="set default role dba for dba_dean@'10.0.%';"
+esql="set default role dba for dba_dean@'%';"
 echo $esql && mysql -u root mysql -e "${esql}"
 
 echo "########### app db"
@@ -53,11 +53,11 @@ fi
 
 echo "########### app user"
 if [ -n $APP_USER ] && [ -n $APP_PASSWD ]; then
-    esql="create user ${APP_USER}@'172.%' identified by '${APP_PASSWD}';"
+    esql="create user ${APP_USER}@'%' identified by '${APP_PASSWD}';"
     echo $esql && mysql -u root mysql -e "${esql}"
-    esql="grant app to ${APP_USER}@'172.%';"
+    esql="grant app to ${APP_USER}@'%';"
     echo $esql && mysql -u root mysql -e "${esql}"
-    esql="set default role app for ${APP_USER}@'172.%';"
+    esql="set default role app for ${APP_USER}@'%';"
     echo $esql && mysql -u root mysql -e "${esql}"
 fi
 

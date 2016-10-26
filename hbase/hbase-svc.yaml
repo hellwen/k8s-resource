@@ -8,15 +8,12 @@ metadata:
 spec:
   type: NodePort
   ports:
-  - port: 50070
-    name: hdfs
-    nodePort: 30001
   - port: 8088
     name: yarn
-    nodePort: 30002
+    nodePort: 30001
   - port: 16010
-    name: hbase
-    nodePort: 30003
+    name: hbase-master
+    nodePort: 30002
   - port: 8090
     name: hbase-rest
     nodePort: 30004

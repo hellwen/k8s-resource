@@ -4,59 +4,66 @@ echo ""
 echo "########### on-change"
 echo ""
 
+# hosts config
+HOSTS=/etc/hosts
+
 # hadoop config
-SLAVES=$HADOOP_CONF_DIR/slaves
+HADOOP_SLAVES=$HADOOP_CONF_DIR/slaves
 HDFS_SITE=$HADOOP_CONF_DIR/hdfs-site.xml
 
 # hbase config
-REGION=$HBASE_HOME/conf/regionservers
+HBASE_REGION=$HBASE_HOME/conf/regionservers
 HBASE_SITE=$HBASE_HOME/conf/hbase-site.xml
 
 # zk config
-CFG=$ZK_HOME/conf/zoo.cfg
-CFG_BAK=$ZK_HOME/conf/zoo.cfg.bak
-MY_ID=/data/zk/data/myid
+ZK_CFG=$ZK_HOME/conf/zoo.cfg
+ZK_CFG_BAK=$ZK_HOME/conf/zoo.cfg.bak
+ZK_MY_ID=/data/zk/data/myid
+
+MY_HOSTNAME=$(hostname)
+
+echo "########### on init"
+/usr/local/on-init.sh
+
+echo "########### /etc/hosts"
+while read -ra LINE; do
+    IP=${LINE#*,}
+    DNS=${LINE%%,*}
+    HOST=${LINE%%.*}
+
+    echo "${IP} ${DNS} ${HOST}" >> "${HOSTS}"
+
+    PEERS=("${PEERS[@]}" ${DNS})
+done
 
 echo "########### zk myid"
-IFS='-' read -ra ADDR <<< "$(hostname)"
-echo $(expr "1" + "${ADDR[1]}") > "${MY_ID}"
-
-echo "########### zk init"
-/usr/local/zk-init.sh
+IFS='-' read -ra ADDR <<< "${MY_HOSTNAME}"
+echo $(expr "1" + "${ADDR[1]}") > "${ZK_MY_ID}"
 
 echo "########### zk servers"
 i=0
-while read -ra LINE; do
+for peer in ${PEERS[@]}; do
     let i=i+1
-    IP=("${IPS[@]}" ${LINE#*,})
-    DNS=("${PEERS[@]}" ${LINE%%,*})
-    IPS=("${IPS[@]}" ${IP})
-    PEERS=("${PEERS[@]}" ${DNS})
-    echo "server.${i}=${DNS}:2191:2192" >> "${CFG_BAK}"
+    echo "server.${i}=${peer}:2191:2192" >> "${ZK_CFG_BAK}"
 done
-cp ${CFG_BAK} ${CFG}
+cp ${ZK_CFG_BAK} ${ZK_CFG}
 
 echo "########### hadoop slaves"
-echo "" > ${SLAVES}
+> ${HADOOP_SLAVES}
 for peer in ${PEERS[@]}; do
-    echo ${peer} >> ${SLAVES}
+    echo ${peer} >> ${HADOOP_SLAVES}
 done
-cat ${SLAVES}
+cat ${HADOOP_SLAVES}
 
 echo "########### hbase region servers"
-echo "" > ${REGION}
+> ${HBASE_REGION}
 ZK_QUORUM="<name>hbase.zookeeper.quorum</name><value>"
 for peer in ${PEERS[@]}; do
-    echo "${peer}" >> "${REGION}"
+    echo "${peer}" >> "${HBASE_REGION}"
     ZK_QUORUM="${ZK_QUORUM}${peer},"
 done
 ZK_QUORUM="${ZK_QUORUM%,*}</value>"
 sed -i "/<name>hbase.zookeeper.quorum/ s:.*:${ZK_QUORUM}:" ${HBASE_SITE}
-
-echo "########### hbase region servers"
-cat ${REGION}
-
-echo "########### zookeeper quorum"
 echo ${ZK_QUORUM}
 
 echo "########### hadoop replicas modifiy"
@@ -74,26 +81,25 @@ cp $HADOOP_CONF_DIR/hdfs-site.xml $HBASE_HOME/conf/
 echo "########### host info"
 MASTER_DNS=${PEERS[0]}
 MASTER=${MASTER_DNS%%.*}
-HOSTNAME=$(hostname)
 
-echo "i  am  is: ${HOSTNAME}"
+echo "i  am  is: ${MY_HOSTNAME}"
 echo "master is: ${MASTER}"
 
 echo "########### zk restart"
 $ZK_HOME/bin/zkServer.sh restart
 
-if [[ "${MASTER}" == *"${HOSTNAME}"* ]]; then
+if [[ "${MASTER}" == *"${MY_HOSTNAME}"* ]]; then
     echo "########### restarting..."
 
     echo "########### hbase stop"
-    /usr/local/hbase-stop.sh
+    #/usr/local/hbase-stop.sh
     echo "########### hadoop stop"
     /usr/local/hadoop-stop.sh
 
     echo "########### hadoop start"
     /usr/local/hadoop-start.sh
     echo "########### hbase start"
-    /usr/local/hbase-start.sh
+    #/usr/local/hbase-start.sh
 
     echo "########### finished"
 fi

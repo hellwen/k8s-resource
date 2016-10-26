@@ -33,7 +33,11 @@ echo $(expr "1" + "${ADDR[1]}") > "${MY_ID}"
 i=0
 while read -ra LINE; do
     let i=i+1
-    echo "server.${i}=${LINE}:2191:2192" >> "${CFG_BAK}"
+    IP=${LINE#*,}
+    DNS=${LINE%%,*}
+    HOST=${LINE%%.*}
+
+    echo "server.${i}=${DNS}:2191:2192" >> "${CFG_BAK}"
 done
 cp ${CFG_BAK} ${CFG}
 
