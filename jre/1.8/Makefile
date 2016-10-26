@@ -1,7 +1,7 @@
 all: push
 
 TAG = 1.8.001
-PREFIX = 10.0.12.203:32000/jre
+PREFIX = 10.0.12.207:32000/jre
 
 container:
 	docker build -t $(PREFIX):$(TAG) .

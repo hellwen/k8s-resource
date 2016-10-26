@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #MASTER=${HOSTNAME}
-MASTER=${SERVICE}-0.${SERVICE}.${NAMESPACE}.svc.zeusis.com
+MASTER=hbase-0.${SERVICE}.${NAMESPACE}.svc.zeusis.com
 
 cat << EOF > $HADOOP_CONF_DIR/core-site.xml
 <configuration>

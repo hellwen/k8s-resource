@@ -1,9 +1,9 @@
 #!/bin/bash
 
-MASTER=${HOSTNAME}
-#MASTER=hadoop-0.${SERVICE}.${NAMESPACE}.svc.zeusis.com
+#MASTER=${HOSTNAME}
+MASTER=${SERVICE}-0.${SERVICE}.${NAMESPACE}.svc.zeusis.com
 
-cat << EOF > $HADOOP_PREFIX/etc/hadoop/core-site.xml
+cat << EOF > $HADOOP_CONF_DIR/core-site.xml
 <configuration>
     <property>
         <name>fs.defaultFS</name>
@@ -12,7 +12,7 @@ cat << EOF > $HADOOP_PREFIX/etc/hadoop/core-site.xml
 </configuration>
 EOF
 
-cat << EOF > $HADOOP_PREFIX/etc/hadoop/hdfs-site.xml
+cat << EOF > $HADOOP_CONF_DIR/hdfs-site.xml
 <configuration>
     <property>
         <name>dfs.namenode.name.dir</name>
@@ -28,7 +28,7 @@ cat << EOF > $HADOOP_PREFIX/etc/hadoop/hdfs-site.xml
 </configuration>
 EOF
 
-cat << EOF > $HADOOP_PREFIX/etc/hadoop/mapred-site.xml
+cat << EOF > $HADOOP_CONF_DIR/mapred-site.xml
 <configuration>
     <property>
         <name>mapreduce.framework.name</name>
@@ -45,7 +45,7 @@ cat << EOF > $HADOOP_PREFIX/etc/hadoop/mapred-site.xml
 </configuration>
 EOF
 
-cat << EOF > $HADOOP_PREFIX/etc/hadoop/yarn-site.xml
+cat << EOF > $YARN_CONF_DIR//yarn-site.xml
 <configuration>
     <property>
         <name>yarn.resourcemanager.address</name>
@@ -58,7 +58,7 @@ cat << EOF > $HADOOP_PREFIX/etc/hadoop/yarn-site.xml
 </configuration>
 EOF
 
-cat << EOF > $HADOOP_PREFIX/etc/hadoop/slaves
+cat << EOF > $HADOOP_CONF_DIR/slaves
 ${MASTER}
 EOF
 

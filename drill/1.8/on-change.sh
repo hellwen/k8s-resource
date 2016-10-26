@@ -5,7 +5,7 @@ echo "########### on-change"
 echo ""
 
 # hadoop config
-SLAVES=$HADOOP_CONF_DIR/slaves
+HADOOP_SLAVES=$HADOOP_CONF_DIR/slaves
 HDFS_SITE=$HADOOP_CONF_DIR/hdfs-site.xml
 
 # hbase config
@@ -13,13 +13,16 @@ REGION=$HBASE_HOME/conf/regionservers
 HBASE_SITE=$HBASE_HOME/conf/hbase-site.xml
 
 # zk config
-CFG=$ZK_HOME/conf/zoo.cfg
-CFG_BAK=$ZK_HOME/conf/zoo.cfg.bak
-MY_ID=/data/zk/data/myid
+ZK_CFG=$ZK_HOME/conf/zoo.cfg
+ZK_CFG_BAK=$ZK_HOME/conf/zoo.cfg.bak
+ZK_MY_ID=/data/zk/data/myid
+
+# drill config
+DRILL_CONF=$DRILL_HOME/conf/drill-override.conf
 
 echo "########### zk myid"
 IFS='-' read -ra ADDR <<< "$(hostname)"
-echo $(expr "1" + "${ADDR[1]}") > "${MY_ID}"
+echo $(expr "1" + "${ADDR[1]}") > "${ZK_MY_ID}"
 
 echo "########### zk init"
 /usr/local/zk-init.sh
@@ -34,14 +37,14 @@ while read -ra LINE; do
     PEERS=("${PEERS[@]}" ${DNS})
     echo "server.${i}=${DNS}:2191:2192" >> "${CFG_BAK}"
 done
-cp ${CFG_BAK} ${CFG}
+cp ${ZK_CFG_BAK} ${ZK_CFG}
 
 echo "########### hadoop slaves"
-echo "" > ${SLAVES}
+echo "" > ${HADOOP_SLAVES}
 for peer in ${PEERS[@]}; do
-    echo ${peer} >> ${SLAVES}
+    echo ${peer} >> ${HADOOP_SLAVES}
 done
-cat ${SLAVES}
+cat ${HADOOP_SLAVES}
 
 echo "########### hbase region servers"
 echo "" > ${REGION}
@@ -58,6 +61,14 @@ cat ${REGION}
 
 echo "########### zookeeper quorum"
 echo ${ZK_QUORUM}
+
+echo "########### drill zk connect"
+DRILL_ZKS="zk.connect\:\""
+for peer in ${PEERS[@]}; do
+    DRILL_ZKS="${DRILL_ZKS}${peer}\:2181,"
+done
+DRILL_ZKS="${DRILL_ZKS%,*}\""
+sed -i "/zk.connect/ s:.*:${DRILL_ZKS}:" ${DRILL_CONF}
 
 echo "########### hadoop replicas modifiy"
 replicas=${#PEERS[@]}
@@ -85,15 +96,22 @@ $ZK_HOME/bin/zkServer.sh restart
 if [[ "${MASTER}" == *"${HOSTNAME}"* ]]; then
     echo "########### restarting..."
 
+    echo "########### hive stop"
+    # /usr/local/hive-stop.sh
     echo "########### hbase stop"
-    /usr/local/hbase-stop.sh
+    # /usr/local/hbase-stop.sh
     echo "########### hadoop stop"
     /usr/local/hadoop-stop.sh
 
     echo "########### hadoop start"
     /usr/local/hadoop-start.sh
     echo "########### hbase start"
-    /usr/local/hbase-start.sh
+    # /usr/local/hbase-start.sh
+    echo "########### hive start"
+    # /usr/local/hive-start.sh
 
     echo "########### finished"
 fi
+
+echo "########### drill restart"
+$DRILL_HOME/bin/drillbit.sh restart

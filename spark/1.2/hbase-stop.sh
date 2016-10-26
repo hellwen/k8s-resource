@@ -1,4 +1,4 @@
 #!/bin/bash
 
-$HBASE_HOME/bin/hbase-daemon.sh stop rest
+# stop hbase
 $HBASE_HOME/bin/stop-hbase.sh

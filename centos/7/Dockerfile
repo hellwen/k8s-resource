@@ -1,5 +1,5 @@
-FROM 10.0.12.203:32000/centos:7
-MAINTAINER hellwen wu <hellwen.wu@gmail.com>
+FROM 10.0.12.207:32000/centos:7
+MAINTAINER Hellwen <hellwen.wu@gmail.com>
 
 # 163 yum repos
 ADD CentOS-Base-163.repo /etc/yum.repos.d/CentOS-Base.repo
@@ -11,7 +11,16 @@ RUN cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 RUN yum clean all; \
     rpm --rebuilddb; \
     yum install -y which tar sudo openssh-server openssh-clients epel-release; \
-    yum install -y pwgen rsync net-tools sysstat bind-utils
+    yum install -y pwgen rsync net-tools sysstat bind-utils ntp
+
+# install term
+RUN yum install -y xterm && \
+    echo "# add by init" >> /etc/profile && \
+    echo "set -o vi" >> /etc/profile && \
+    echo "export TERM=xterm" >> /etc/profile
+
+# start ntp
+RUN ntpd -q &
 
 # passwordless ssh
 RUN rm -f /etc/ssh/ssh_host_ecdsa_key /etc/ssh/ssh_host_rsa_key && \
@@ -26,22 +35,14 @@ RUN rm -f /etc/ssh/ssh_host_ecdsa_key /etc/ssh/ssh_host_rsa_key && \
     echo "LogLevel quiet" >> /etc/ssh/ssh_config && \
     echo "Port 2122" >> /etc/ssh/ssh_config
 
-# install term
-RUN yum install -y xterm && \
-    echo "# add by init" >> /etc/profile && \
-    echo "set -o vi" >> /etc/profile && \
-    echo "export TERM=xterm" >> /etc/profile
-
-# make data dir
-RUN mkdir -p /data
-
-# entry point
-ADD set_root_pw.sh /set_root_pw.sh
+# add files
+ADD peer-finder /peer-finder
 ADD init.sh /init.sh
-RUN chmod +x /*.sh
+ADD set_root_pw.sh /set_root_pw.sh
+RUN chmod +x /peer-finder && \
+    chmod +x /init.sh && \
+    chmod +x /set_root_pw.sh
+
 ENTRYPOINT ["/init.sh"]
 
-ENV AUTHORIZED_KEYS **None**
-
 EXPOSE 2122
-CMD [""]

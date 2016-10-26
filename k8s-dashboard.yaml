@@ -34,10 +34,9 @@ spec:
         app: kubernetes-dashboard
     spec:
       nodeSelector:
-        kubernetes.io/hostname: 10.0.12.203
+        kubernetes.io/hostname: 10.0.12.207
       containers:
       - name: kubernetes-dashboard
-        #image: index.docker.io/liuan/kubernetes-dashboard-amd64:v1.4.0-beta2
         image: index.docker.io/larry0208/kubernetes-dashboard-amd64-google:v1.4.0-beta1
         imagePullPolicy: IfNotPresent
         ports:
@@ -47,7 +46,7 @@ spec:
           # Uncomment the following line to manually specify Kubernetes API server Host
           # If not specified, Dashboard will attempt to auto discover the API server and connect
           # to it. Uncomment only if the default does not work.
-          - --apiserver-host=http://10.0.12.203:8080
+          - --apiserver-host=http://10.0.12.207:8080
         livenessProbe:
           httpGet:
             path: /

@@ -1,8 +1,10 @@
 #! /bin/bash
 
-ZK_CFG_BAK=$ZK_HOME/conf/zoo.cfg.bak
+CFG=$ZK_HOME/conf/zoo.cfg
+CFG_BAK=$ZK_HOME/conf/zoo.cfg.bak
+MY_ID=/data/zk/data/myid
 
-cat << EOF > "${ZK_CFG_BAK}"
+cat << EOF > "${CFG_BAK}"
 tickTime=2000
 initLimit=10
 syncLimit=5

@@ -1,7 +1,7 @@
 all: push
 
-TAG = 2.0.001
-PREFIX = 10.0.12.203:32000/spark
+TAG = 1.2.001
+PREFIX = 10.0.12.203:32000/hbase
 
 container:
 	docker build -t $(PREFIX):$(TAG) .

@@ -1,39 +1,40 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: hbase
+  name: drill
   namespace: development
   labels:
-    app: hbase
+    app: drill
 spec:
   clusterIP: None
   ports:
   - port: 2122
     name: ssh
   selector:
-    app: hbase
+    app: drill
 ---
 apiVersion: apps/v1alpha1
 kind: PetSet
 metadata:
-  name: hbase
+  name: drill
   namespace: development
 spec:
-  replicas: 2
-  serviceName: hbase
+  replicas: 3
+  serviceName: drill
   template:
     metadata:
       annotations:
         pod.alpha.kubernetes.io/initialized: "true"
       labels:
-        app: hbase
+        app: drill
     spec:
       nodeSelector:
         type: dell_r610
+        #type: virtual
       terminationGracePeriodSeconds: 0
       containers:
-      - name: hbase
-        image: 10.0.12.207:32000/hbase:1.2.001
+      - name: drill
+        image: 10.0.12.207:32000/drill:1.8.001
         imagePullPolicy: Always
         resources:
           limits:
@@ -78,6 +79,14 @@ spec:
         - containerPort: 60020
         - containerPort: 60030
         - containerPort: 8090
+        # hive
+        - containerPort: 9083
+        - containerPort: 10000
+        # drill
+        - containerPort: 31010
+        - containerPort: 31011
+        - containerPort: 31012
+        - containerPort: 8047
         # zk
         - containerPort: 2181
         - containerPort: 2191
@@ -90,7 +99,7 @@ spec:
         - name: NAMESPACE
           value: "development"
         - name: SERVICE
-          value: "hbase"
+          value: "drill"
         - name: POD_IP
           valueFrom:
             fieldRef:

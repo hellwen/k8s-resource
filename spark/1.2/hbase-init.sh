@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #MASTER=${HOSTNAME}
-MASTER=${SERVICE}-0.${SERVICE}.${NAMESPACE}.svc.zeusis.com
+MASTER=hbase-0.${SERVICE}.${NAMESPACE}.svc.zeusis.com
 
 cat << EOF > $HBASE_HOME/conf/hbase-site.xml
 <configuration>
@@ -12,10 +12,6 @@ cat << EOF > $HBASE_HOME/conf/hbase-site.xml
     <property>
         <name>hbase.cluster.distributed</name>
         <value>true</value>
-    </property>
-    <property>
-        <name>hbase.rest.port</name>
-        <value>8090</value>
     </property>
     <property>
         <name>hbase.master</name>

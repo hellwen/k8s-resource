@@ -25,6 +25,12 @@ $HADOOP_HOME/bin/hdfs namenode -format
 echo "########### hbase init"
 /usr/local/hbase-init.sh
 
+echo "########### hive init"
+/usr/local/hive-init.sh
+
+echo "########### spark init"
+/usr/local/spark-init.sh
+
 echo "########### peer-finder running..."
 /peer-finder -on-change=/usr/local/on-change.sh -on-start=/usr/local/on-change.sh -service=$SERVICE -ns=$NAMESPACE
 

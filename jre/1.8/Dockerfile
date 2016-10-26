@@ -1,4 +1,4 @@
-FROM 10.0.12.203:32000/centos:7-onbuild.001
+FROM 10.0.12.207:32000/centos:7.001
 MAINTAINER Hellwen <hellwen.wu@gmail.com>
 
 # java
@@ -7,4 +7,3 @@ RUN cd /usr/local && \
     ln -s jre1.8.0_101 jre && \
     echo "export JAVA_HOME=/usr/local/jre" >> /etc/profile && \
     echo "export PATH=\$PATH:\$JAVA_HOME/bin" >> /etc/profile
-
