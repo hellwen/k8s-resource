@@ -1,15 +1,16 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: drill-node
+  name: hadoop-node
   namespace: development
   labels:
-    app: drill
+    app: hadoop
 spec:
   type: NodePort
   ports:
-  - port: 8047
-    name: drill
+  - port: 8088
+    name: yarn
     nodePort: 30005
   selector:
-    app: drill
+  selector:
+    app: hadoop

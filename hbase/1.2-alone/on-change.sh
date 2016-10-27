@@ -15,11 +15,6 @@ HDFS_SITE=$HADOOP_CONF_DIR/hdfs-site.xml
 HBASE_REGION=$HBASE_HOME/conf/regionservers
 HBASE_SITE=$HBASE_HOME/conf/hbase-site.xml
 
-# zk config
-ZK_CFG=$ZK_HOME/conf/zoo.cfg
-ZK_CFG_BAK=$ZK_HOME/conf/zoo.cfg.bak
-ZK_MY_ID=/data/zk/data/myid
-
 MY_HOSTNAME=$(hostname)
 
 echo "########### on init"
@@ -36,18 +31,6 @@ while read -ra LINE; do
     PEERS=("${PEERS[@]}" ${DNS})
     #PEERS=("${PEERS[@]}" ${HOST})
 done
-
-echo "########### zk myid"
-IFS='-' read -ra ADDR <<< "${MY_HOSTNAME}"
-echo $(expr "1" + "${ADDR[1]}") > "${ZK_MY_ID}"
-
-echo "########### zk servers"
-i=0
-for peer in ${PEERS[@]}; do
-    let i=i+1
-    echo "server.${i}=${peer}:2191:2192" >> "${ZK_CFG_BAK}"
-done
-cp ${ZK_CFG_BAK} ${ZK_CFG}
 
 echo "########### hadoop slaves"
 > ${HADOOP_SLAVES}
@@ -87,21 +70,18 @@ MASTER=${MASTER_DNS%%.*}
 echo "i  am  is: ${MY_HOSTNAME}"
 echo "master is: ${MASTER}"
 
-echo "########### zk restart"
-$ZK_HOME/bin/zkServer.sh restart
-
 if [[ "${MASTER}" == *"${MY_HOSTNAME}"* ]]; then
     echo "########### restarting..."
 
     echo "########### hbase stop"
-    #/usr/local/hbase-stop.sh
+    /usr/local/hbase-stop.sh
     echo "########### hadoop stop"
-    #/usr/local/hadoop-stop.sh
+    /usr/local/hadoop-stop.sh
 
     echo "########### hadoop start"
-    #/usr/local/hadoop-start.sh
+    /usr/local/hadoop-start.sh
     echo "########### hbase start"
-    #/usr/local/hbase-start.sh
+    /usr/local/hbase-start.sh
 
     echo "########### finished"
 fi

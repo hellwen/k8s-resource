@@ -31,7 +31,7 @@ MASTER=${MASTER_DNS%%.*}
 HOSTNAME=$(hostname)
 
 echo "########### host info"
-echo "i am is  : ${HOSTNAME}"
+echo "i  am  is: ${HOSTNAME}"
 echo "master is: ${MASTER}"
 
 if [[ "${MASTER}" == *"${HOSTNAME}"* ]]; then

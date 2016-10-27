@@ -17,9 +17,9 @@ spec:
   - port: 9090
     name: hbase-thrift
     nodePort: 30003
-  #- port: 8090
-  #  name: hbase-rest
-  #  nodePort: 30004
+  - port: 8090
+    name: hbase-rest
+    nodePort: 30004
   selector:
   selector:
     app: hbase

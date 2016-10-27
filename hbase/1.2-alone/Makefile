@@ -1,7 +1,7 @@
 all: push
 
-TAG = 2.7.001
-PREFIX = 10.0.12.207:32000/hadoop
+TAG = 1.2-alone.001
+PREFIX = 10.0.12.207:32000/hbase
 
 container:
 	docker build -t $(PREFIX):$(TAG) .

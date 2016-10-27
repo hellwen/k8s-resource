@@ -6,7 +6,6 @@ RUN yum update -y libselinux
 
 # install package
 ADD tarballs/hadoop-2.7.3.tar.gz              /usr/local
-ADD tarballs/zookeeper-3.4.9.tar.gz           /usr/local
 ADD tarballs/hbase-1.2.3-bin.tar.gz           /usr/local
 
 # hadoop
@@ -25,13 +24,6 @@ RUN cd /usr/local && \
 ADD hadoop-init.sh  /usr/local/hadoop-init.sh
 ADD hadoop-start.sh /usr/local/hadoop-start.sh
 ADD hadoop-stop.sh  /usr/local/hadoop-stop.sh
-
-# zookeeper
-ENV ZK_HOME /usr/local/zk
-RUN cd /usr/local && \
-    ln -s zookeeper-3.4.9 zk && \
-    echo "export ZK_HOME=$ZK_HOME" >> /etc/profile && \
-    echo "export PATH=\$PATH:\$ZK_HOME/bin" >> /etc/profile
 
 # hbase
 ENV HBASE_HOME /usr/local/hbase
@@ -55,15 +47,11 @@ ADD bootstrap.sh /bootstrap.sh
 RUN chmod +x /bootstrap.sh
 ENTRYPOINT ["/bootstrap.sh"]
 
-# Hdfs ports
-EXPOSE 50010 50020 50070 50470 50075 50475 50090 8020 8019 8485 8480
-# Mapred ports
-EXPOSE 10020 19888
-# Yarn ports
-EXPOSE 8030 8031 8032 8033 8040 8041 8042 8088 10020 19888
 # Hbase ports
-EXPOSE 60000 60010 60020 60030 8080 16010 16020 16030 8090 56567
+EXPOSE 60000 60010 60020 60030 8080 16010 16020 16030 56567
 # hbase thrift
 EXPOSE 9090
+# hbase rest
+EXPOSE 8090
 # zookeeper
 EXPOSE 2191 2192 2181
