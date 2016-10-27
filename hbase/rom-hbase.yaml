@@ -78,6 +78,7 @@ spec:
         - containerPort: 60020
         - containerPort: 60030
         - containerPort: 8090
+        - containerPort: 9090
         # zk
         - containerPort: 2181
         - containerPort: 2191

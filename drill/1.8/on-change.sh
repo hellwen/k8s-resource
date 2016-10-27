@@ -64,21 +64,4 @@ $ZK_HOME/bin/zkServer.sh restart
 echo "########### drill restart"
 $DRILL_HOME/bin/drillbit.sh restart
 
-if [[ "${MASTER}" == *"${MY_HOSTNAME}"* ]] && [ -n ${HBASE_ZOOKEEPER_QUORUM} ]; then
-    echo "########### open hbase plugin & connect hbase"
-    echo $HBASE_ZOOKEEPER_QUORUM
-    curl -X POST -H "Content-Type: application/json" -d " {
-      \"name\" : \"hbase\",
-      \"config\" : {
-        \"type\" : \"hbase\",
-        \"config\" : {
-          \"hbase.zookeeper.quorum\" : \"${HBASE_ZOOKEEPER_QUORUM}\",
-          \"hbase.zookeeper.property.clientPort\" : \"2181\"
-        },
-        \"size.calculator.enabled\" : false,
-        \"enabled\" : true
-      }
-    }" http://localhost:8047/storage/hbase.json
-fi
-
 echo "########### finished"

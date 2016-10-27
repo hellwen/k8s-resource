@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#MASTER=${SERVICE}-0
+#MASTER=${HOSTNAME}
 MASTER=${SERVICE}-0.${SERVICE}.${NAMESPACE}.svc.zeusis.com
 
 cat << EOF > $HBASE_HOME/conf/hbase-site.xml
@@ -23,23 +23,11 @@ cat << EOF > $HBASE_HOME/conf/hbase-site.xml
     </property>
     <property>
         <name>hbase.zookeeper.property.dataDir</name>
-        <value>/data/zk/data</value>
-    </property>
-    <property>
-        <name>zookeeper.znode.parent</name>
-        <value>/hbase</value>
+        <value>/usr/local/zookeeper</value>
     </property>
     <property>
         <name>hbase.zookeeper.property.clientPort</name>
         <value>2181</value>
-    </property>
-    <property>
-        <name>hbase.zookeeper.peerport</name>
-        <value>2191</value>
-    </property>
-    <property>
-        <name>hbase.zookeeper.leaderport</name>
-        <value>2192</value>
     </property>
     <property>
         <name>hbase.zookeeper.quorum</name><value>node-a.example.com,node-b.example.com</value>

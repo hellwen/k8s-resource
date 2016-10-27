@@ -1,0 +1,77 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: rom-mysql
+  namespace: development
+  labels:
+    app: rom-mysql
+spec:
+  type: NodePort
+  ports:
+  - port: 2122
+    name: ssh
+    nodePort: 30012
+  - port: 3310
+    name: mysql
+    nodePort: 30013
+  selector:
+    app: rom-mysql
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: rom-mysql
+  namespace: development
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: rom-mysql
+    spec:
+      #nodeSelector:
+        #type: virtual
+      containers:
+      - name: rom-mysql
+        image: 10.0.12.207:32000/mariadb:10.1.001
+        imagePullPolicy: Always
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 2000Mi
+        ports:
+        # ssh
+        - containerPort: 2122
+        # mysql
+        - containerPort: 3310
+        env:
+        - name: APP_DB
+          value: "rom"
+        - name: APP_USER
+          value: "rom"
+        - name: APP_PASSWD
+          value: "rom"
+        args:
+        - -d
+        volumeMounts:
+        - name: ssh-key
+          mountPath: /.ssh
+          readOnly: true
+#        - name: rom-mysql-data
+#          mountPath: /data
+      volumes:
+      - name: ssh-key
+        secret:
+          secretName: ssh-key 
+          items:
+          - key: authorized-keys
+            path: authorized_keys
+#  volumeClaimTemplates:
+#  - metadata:
+#      name: rom-mysql-data
+#    spec:
+#      accessModes:
+#      - ReadWriteOnce
+#      resources:
+#        requests:
+#          storage: 1Gi
