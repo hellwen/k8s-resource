@@ -10,7 +10,7 @@ spec:
   ports:
   - port: 8088
     name: yarn
-    nodePort: 30005
+    nodePort: 30014
   selector:
   selector:
     app: hadoop

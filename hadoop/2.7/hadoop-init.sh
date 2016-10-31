@@ -1,7 +1,7 @@
 #!/bin/bash
 
-MASTER=${HOSTNAME}
-#MASTER=hadoop-0.${SERVICE}.${NAMESPACE}.svc.zeusis.com
+#MASTER=${HOSTNAME}
+MASTER=${SERVICE}-0.${SERVICE}.${NAMESPACE}.svc.zeusis.com
 
 cat << EOF > $HADOOP_PREFIX/etc/hadoop/core-site.xml
 <configuration>
@@ -14,6 +14,10 @@ EOF
 
 cat << EOF > $HADOOP_PREFIX/etc/hadoop/hdfs-site.xml
 <configuration>
+    <property>
+        <name>dfs.namenode.datanode.registration.ip-hostname-check</name>
+        <value>false</value>
+    </property>
     <property>
         <name>dfs.namenode.name.dir</name>
         <value>/data/dhfs/namenode</value>

@@ -10,8 +10,13 @@ HDFS_SITE=$HADOOP_PREFIX/etc/hadoop/hdfs-site.xml
 echo "########### slaves add"
 echo "" > ${SLAVES}
 while read -ra LINE; do
-    PEERS=("${PEERS[@]}" $LINE)
-    echo "${LINE}" >> "${SLAVES}"
+    IP=${LINE#*,}
+    DNS=${LINE%%,*}
+    HOST=${LINE%%.*}
+
+    PEERS=("${PEERS[@]}" ${DNS})
+
+    echo "${DNS}" >> "${SLAVES}"
 done
 
 # replication the replicas

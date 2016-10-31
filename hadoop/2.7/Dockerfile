@@ -9,18 +9,18 @@ ADD tarballs/hadoop-2.7.3.tar.gz /usr/local
 
 # hadoop
 ENV HADOOP_PREFIX /usr/local/hadoop
-
+ENV HADOOP_HOME   /usr/local/hadoop
 RUN cd /usr/local && \
     ln -s hadoop-2.7.3 hadoop && \
     echo "export HADOOP_PREFIX=$HADOOP_PREFIX" >> /etc/profile && \
-    echo "export HADOOP_COMMON_HOME=$HADOOP_PREFIX" >> /etc/profile && \
-    echo "export HADOOP_HDFS_HOME=$HADOOP_PREFIX" >> /etc/profile && \
-    echo "export HADOOP_MAPRED_HOME=$HADOOP_PREFIX" >> /etc/profile && \
-    echo "export HADOOP_YARN_HOME=$HADOOP_PREFIX" >> /etc/profile && \
-    echo "export HADOOP_CONF_DIR=$HADOOP_PREFIX/etc/hadoop" >> /etc/profile && \
-    echo "export YARN_CONF_DIR=$HADOOP_PREFIX/etc/hadoop" >> /etc/profile && \
-    echo "export PATH=\$PATH:\$HADOOP_PREFIX/bin" >> /etc/profile
-
+    echo "export HADOOP_HOME=$HADOOP_HOME" >> /etc/profile && \
+    echo "export HADOOP_COMMON_HOME=$HADOOP_HOME" >> /etc/profile && \
+    echo "export HADOOP_HDFS_HOME=$HADOOP_HOME" >> /etc/profile && \
+    echo "export HADOOP_MAPRED_HOME=$HADOOP_HOME" >> /etc/profile && \
+    echo "export HADOOP_YARN_HOME=$HADOOP_HOME" >> /etc/profile && \
+    echo "export HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop" >> /etc/profile && \
+    echo "export YARN_CONF_DIR=$HADOOP_HOME/etc/hadoop" >> /etc/profile && \
+    echo "export PATH=\$PATH:\$HADOOP_HOME/bin" >> /etc/profile
 
 ADD hadoop-init.sh  /usr/local/hadoop-init.sh
 ADD hadoop-start.sh /usr/local/hadoop-start.sh
