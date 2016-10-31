@@ -21,4 +21,4 @@ container:
 	docker build -t $(PREFIX)/heapster_grafana:$(TAG) .
 
 push:
-	gcloud docker -- push $(PREFIX)/heapster_grafana:$(TAG)
+	docker push $(PREFIX)/heapster_grafana:$(TAG)
