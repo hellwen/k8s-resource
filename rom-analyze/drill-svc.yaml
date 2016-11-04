@@ -1,0 +1,15 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: drill-node
+  namespace: development
+  labels:
+    app: drill
+spec:
+  type: NodePort
+  ports:
+  - port: 8047
+    name: drill
+    nodePort: 30005
+  selector:
+    app: drill

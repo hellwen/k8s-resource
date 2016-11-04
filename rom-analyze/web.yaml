@@ -1,0 +1,59 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: rom-web
+  namespace: development
+  labels:
+    app: rom-web
+    system: rom
+spec:
+  type: NodePort
+  ports:
+  - port: 2122
+    name: ssh
+    nodePort: 30017
+  - port: 80
+    name: web
+    nodePort: 30018
+  selector:
+    app: rom-web
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: rom-web
+  namespace: development
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: rom-web
+        system: rom
+    spec:
+      containers:
+      - name: rom-web
+        image: 10.0.12.207:32000/centos:7.001
+        imagePullPolicy: Always
+        resources:
+          limits:
+            cpu: 500m
+            memory: 1000Mi
+        ports:
+        # ssh
+        - containerPort: 2122
+        # web
+        - containerPort: 80
+        args:
+        - -d
+        volumeMounts:
+        - name: ssh-key
+          mountPath: /.ssh
+          readOnly: true
+      volumes:
+      - name: ssh-key
+        secret:
+          secretName: ssh-key 
+          items:
+          - key: authorized-keys
+            path: authorized_keys

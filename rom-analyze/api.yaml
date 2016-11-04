@@ -1,0 +1,59 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: rom-api
+  namespace: development
+  labels:
+    app: rom-api
+    system: rom
+spec:
+  type: NodePort
+  ports:
+  - port: 2122
+    name: ssh
+    nodePort: 30015
+  - port: 8000
+    name: api
+    nodePort: 30016
+  selector:
+    app: rom-api
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: rom-api
+  namespace: development
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: rom-api
+        system: rom
+    spec:
+      containers:
+      - name: rom-api
+        image: 10.0.12.207:32000/jdk:1.8.001
+        imagePullPolicy: Always
+        resources:
+          limits:
+            cpu: 500m
+            memory: 1000Mi
+        ports:
+        # ssh
+        - containerPort: 2122
+        # api
+        - containerPort: 8000
+        args:
+        - -d
+        volumeMounts:
+        - name: ssh-key
+          mountPath: /.ssh
+          readOnly: true
+      volumes:
+      - name: ssh-key
+        secret:
+          secretName: ssh-key 
+          items:
+          - key: authorized-keys
+            path: authorized_keys
