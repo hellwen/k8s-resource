@@ -3,11 +3,12 @@ kind: Pod
 metadata:
   name: my-centos
 spec:
-  nodeSelector:
-    type: dell_r610
+  #nodeSelector:
+  #  type: dell_r610
   containers:
   - name: my-centos
-    image: 10.0.12.207:32000/centos:7.001
+    #image: 10.0.12.207:32000/centos:7.001
+    image: centos:7
     imagePullPolicy: Always
     args:
     - -d
