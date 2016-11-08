@@ -42,50 +42,6 @@ spec:
           requests:
             cpu: 4000m
             memory: 8000Mi
-        ports:
-        # hdfs
-        - containerPort: 50010
-        - containerPort: 50020
-        - containerPort: 50070
-        - containerPort: 50470
-        - containerPort: 50075
-        - containerPort: 50475
-        - containerPort: 50090
-        - containerPort: 8019
-        - containerPort: 8020
-        - containerPort: 8480
-        - containerPort: 8485
-        # mapred
-        - containerPort: 10020
-        - containerPort: 19888
-        # yarn
-        - containerPort: 8030
-        - containerPort: 8031
-        - containerPort: 8032
-        - containerPort: 8033
-        - containerPort: 8040
-        - containerPort: 8042
-        - containerPort: 8088
-        # jobhistory
-        - containerPort: 10020
-        - containerPort: 19888
-        # hbase
-        - containerPort: 16010
-        - containerPort: 16020
-        - containerPort: 16030
-        - containerPort: 60000
-        - containerPort: 60010
-        - containerPort: 60020
-        - containerPort: 60030
-        - containerPort: 8090
-        - containerPort: 9090
-        - containerPort: 56567
-        # zk
-        - containerPort: 2181
-        - containerPort: 2191
-        - containerPort: 2192
-        # ssh
-        - containerPort: 2122
         securityContext:
           privileged: true
         env:
@@ -103,6 +59,8 @@ spec:
         - name: ssh-key
           mountPath: /.ssh
           readOnly: true
+        - name: hbase-data
+          mountPath: /data
       volumes:
       - name: ssh-key
         secret:
@@ -114,3 +72,6 @@ spec:
             path: id_rsa
           - key: id-rsa.pub
             path: id_rsa.pub
+      - name: hbase-data
+        persistentVolumeClaim:
+          claimName: rom-hbase-pvc

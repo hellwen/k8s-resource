@@ -1,0 +1,76 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: elasticsearch
+  namespace: development
+  labels:
+    app: elasticsearch
+spec:
+  clusterIP: None
+  ports:
+  - port: 2122
+    name: ssh
+  - port: 9200
+    name: es-port
+  - port: 9300
+    name: es-cluster
+  selector:
+    app: elasticsearch
+---
+apiVersion: apps/v1alpha1
+kind: PetSet
+metadata:
+  name: elasticsearch
+  namespace: development
+spec:
+  replicas: 2
+  serviceName: elasticsearch
+  template:
+    metadata:
+      annotations:
+        pod.alpha.kubernetes.io/initialized: "true"
+      labels:
+        app: elasticsearch
+    spec:
+      nodeSelector:
+        type: dell_r610
+      terminationGracePeriodSeconds: 0
+      containers:
+      - name: elasticsearch
+        image: 10.0.12.207:32000/elasticsearch:5.0.001
+        imagePullPolicy: Always
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 2000Mi
+          requests:
+            cpu: 1000m
+            memory: 2000Mi
+        securityContext:
+          privileged: true
+        env:
+        - name: NAMESPACE
+          value: "development"
+        - name: SERVICE
+          value: "elasticsearch"
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        args:
+        - -d
+        volumeMounts:
+        - name: ssh-key
+          mountPath: /.ssh
+          readOnly: true
+      volumes:
+      - name: ssh-key
+        secret:
+          secretName: ssh-key 
+          items:
+          - key: authorized-keys
+            path: authorized_keys
+          - key: id-rsa
+            path: id_rsa
+          - key: id-rsa.pub
+            path: id_rsa.pub
