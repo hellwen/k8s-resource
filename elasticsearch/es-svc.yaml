@@ -1,0 +1,18 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: elasticsearch-node
+  namespace: development
+  labels:
+    app: elasticsearch
+spec:
+  type: NodePort
+  ports:
+  - port: 9200
+    name: es
+    nodePort: 32004
+  - port: 5601
+    name: kibana
+    nodePort: 32005
+  selector:
+    app: elasticsearch
