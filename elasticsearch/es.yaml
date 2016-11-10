@@ -23,7 +23,7 @@ metadata:
   name: elasticsearch
   namespace: development
 spec:
-  replicas: 2
+  replicas: 1
   serviceName: elasticsearch
   template:
     metadata:
@@ -33,7 +33,7 @@ spec:
         app: elasticsearch
     spec:
       nodeSelector:
-        type: dell_r610
+        kubernetes.io/hostname: 10.0.12.207
       terminationGracePeriodSeconds: 0
       containers:
       - name: elasticsearch
@@ -42,10 +42,10 @@ spec:
         resources:
           limits:
             cpu: 1000m
-            memory: 2000Mi
+            memory: 4000Mi
           requests:
             cpu: 1000m
-            memory: 2000Mi
+            memory: 4000Mi
         securityContext:
           privileged: true
         env:
