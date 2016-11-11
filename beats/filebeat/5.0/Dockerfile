@@ -18,9 +18,9 @@ RUN apk --no-cache add wget && \
     rm -rf /filebeat* && \
     apk del wget
 
-ADD filebeat.yml           /etc/filebeat/
-ADD filebeat.template.json /etc/filebeat/
+ADD filebeat.yaml               /usr/local/bin/
+ADD filebeat.template.json      /usr/local/bin/
 
-WORKDIR /etc/filebeat/
-
-CMD ["/usr/local/bin/filebeat", "-e", "-c", "filebeat.yml"]
+WORKDIR /usr/local/bin
+#CMD ["filebeat", "-e", "-d", "*", "-c", "filebeat.yaml"]
+CMD ["filebeat", "-e", "-c", "filebeat.yaml"]
