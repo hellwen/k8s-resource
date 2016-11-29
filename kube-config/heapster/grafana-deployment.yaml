@@ -11,8 +11,6 @@ spec:
         task: monitoring
         k8s-app: grafana
     spec:
-      nodeSelector:
-        kubernetes.io/hostname: 10.0.12.207
       volumes:
       - name: grafana-storage
         emptyDir: {}

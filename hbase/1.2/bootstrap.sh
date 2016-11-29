@@ -20,7 +20,7 @@ mkdir -p /data/zk/data
 mkdir -p /data/zk/log
 
 echo "########### hdfs format"
-$HADOOP_HOME/bin/hdfs namenode -format
+$HADOOP_HOME/bin/hdfs namenode -format -nonInteractive
 
 echo "########### hbase init"
 /usr/local/hbase-init.sh

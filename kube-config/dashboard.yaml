@@ -33,8 +33,6 @@ spec:
       labels:
         app: kubernetes-dashboard
     spec:
-      nodeSelector:
-        kubernetes.io/hostname: 10.0.12.207
       containers:
       - name: kubernetes-dashboard
         image: index.docker.io/larry0208/kubernetes-dashboard-amd64-google:v1.4.0-beta1

@@ -35,6 +35,23 @@ RUN rm -f /etc/ssh/ssh_host_ecdsa_key /etc/ssh/ssh_host_rsa_key && \
     echo "LogLevel quiet" >> /etc/ssh/ssh_config && \
     echo "Port 2122" >> /etc/ssh/ssh_config
 
+# gosu
+ENV GOSU_VERSION="1.7"
+ENV GOSU_DOWNLOAD_ROOT="https://github.com/tianon/gosu/releases/download/$GOSU_VERSION"
+ENV GOSU_DOWNLOAD_KEY="0x036A9C25BF357DD4"
+
+RUN set -x \
+    && gpg-agent --daemon \
+    && gpg --keyserver pgp.mit.edu --recv-keys $GOSU_DOWNLOAD_KEY \
+    && echo "trusted-key $GOSU_DOWNLOAD_KEY" >> /root/.gnupg/gpg.conf \
+    && curl -sSL "$GOSU_DOWNLOAD_ROOT/gosu-amd64" > gosu \
+    && curl -sSL "$GOSU_DOWNLOAD_ROOT/gosu-amd64.asc" > gosu.asc \
+    && gpg --verify gosu.asc \
+    && rm -f gosu.asc \
+    && mv gosu /usr/bin/gosu \
+    && chmod +x /usr/bin/gosu \
+    && rm -rf /root/.gnupg
+
 # add files
 ADD peer-finder /peer-finder
 ADD init.sh /init.sh

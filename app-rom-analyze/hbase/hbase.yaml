@@ -28,8 +28,6 @@ spec:
       labels:
         app: rom-hbase
     spec:
-      nodeSelector:
-        type: dell_r610
       terminationGracePeriodSeconds: 0
       containers:
       - name: rom-hbase

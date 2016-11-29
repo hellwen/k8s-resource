@@ -12,8 +12,6 @@ spec:
         k8s-app: heapster
         version: v6
     spec:
-      nodeSelector:
-        kubernetes.io/hostname: 10.0.12.207
       containers:
       - name: heapster
         image: kubernetes/heapster:canary
