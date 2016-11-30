@@ -15,7 +15,7 @@ ENV APPVERSION 1.01
 
 WORKDIR /data
 RUN git clone http://10.0.12.104/dean/rom-flume.git -b $APPVERSION app && \
-    cd app && mkdir -p log && \
+    cd app && \
     pip install --no-cache-dir -r requirements.txt
 
 WORKDIR /data/app
