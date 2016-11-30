@@ -18,8 +18,6 @@ ENV POSTGRES_PASSWORD postgres
 VOLUME /data
 
 ADD tarballs/postgresql-9.6.1-1-linux-x64-binaries.tar.gz /usr/local/
-ADD pg_hba.conf $PG_HOME
-ADD postgresql.conf $PG_HOME
 
 RUN cd $PG_HOME && \
     echo "export PG_HOME=$PG_HOME" >> /etc/profile && \
@@ -29,6 +27,9 @@ RUN cd $PG_HOME && \
 EXPOSE 5440
 # ssh ports
 EXPOSE 2122
+
+ADD pg_hba.conf $PG_HOME
+ADD postgresql.conf $PG_HOME
 
 ENTRYPOINT ["/bootstrap.sh"]
 

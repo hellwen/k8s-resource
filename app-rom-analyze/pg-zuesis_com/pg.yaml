@@ -38,11 +38,11 @@ spec:
         - name: PG_INITDB
           value: "true"
         - name: POSTGRES_DB
-          value: "rom"
+          value: "zeusis_rom"
         - name: POSTGRES_USER
           value: "rom"
         - name: POSTGRES_PASSWORD
-          value: "rom"
+          value: "admin"
         volumeMounts:
         - name: ssh-key
           mountPath: /.ssh

@@ -1,0 +1,28 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: rom-pg-fod-pvc
+  namespace: development
+  labels:
+    kubernetes.io/cluster-service: "true"
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100G
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: development-rom-pg-fod-pv
+  labels:
+    kubernetes.io/cluster-service: "true"
+spec:
+  capacity:
+    storage: 100G
+  accessModes:
+    - ReadWriteOnce
+  nfs:
+    server: 10.0.12.207
+    path: "/data/rom-pg-fod-pv"
