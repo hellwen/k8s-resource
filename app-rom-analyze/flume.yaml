@@ -1,0 +1,21 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: rom-flume
+  namespace: development
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: rom-flume
+        system: rom
+    spec:
+      containers:
+      - name: rom-flume
+        image: 10.0.12.207:32000/rom-flume:1.0.001
+        imagePullPolicy: Always
+        resources:
+          limits:
+            cpu: 500m
+            memory: 1000Mi
