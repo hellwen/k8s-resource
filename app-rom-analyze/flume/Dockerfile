@@ -11,7 +11,7 @@ RUN mkdir -p /data
 # Install git
 RUN apk --no-cache add git gcc musl-dev
 
-ENV APPVERSION 1.03
+ENV APPVERSION 1.04
 
 WORKDIR /data
 RUN git clone http://10.0.12.104/dean/rom-flume.git -b $APPVERSION app && \
