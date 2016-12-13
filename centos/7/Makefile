@@ -1,7 +1,7 @@
 all: push
 
 TAG = 7.002
-PREFIX = 10.0.12.207:32000/centos
+PREFIX = 119.29.43.190:32000/centos
 
 container:
 	docker build -t $(PREFIX):$(TAG) .

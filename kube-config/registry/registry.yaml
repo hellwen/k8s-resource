@@ -42,8 +42,8 @@ spec:
   accessModes:
     - ReadWriteOnce
   nfs:
-    server: 10.0.12.207
-    path: "/data/kube-registry-pv"
+    server: 192.168.72.128
+    path: "/data/registry-pv"
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -75,9 +75,16 @@ spec:
           value: :5000
         - name: REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY
           value: /var/lib/registry
+        - name: REGISTRY_HTTP_TLS_CERTIFICATE
+          value: /certs/domain-crt
+        - name: REGISTRY_HTTP_TLS_KEY
+          value: /certs/domain-key
         volumeMounts:
         - name: image-store
           mountPath: /var/lib/registry
+        - name: tls-certs
+          mountPath: /certs
+          readOnly: true
         ports:
         - containerPort: 5000
           name: registry
@@ -89,3 +96,11 @@ spec:
       - name: image-store
         persistentVolumeClaim:
           claimName: kube-registry-pvc
+      - name: tls-certs
+        secret:
+          secretName: kube-registry-tls-certs
+          items:
+          - key: domain-key
+            path: domain-key
+          - key: domain-crt
+            path: domain-crt

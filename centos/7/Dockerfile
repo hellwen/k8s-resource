@@ -1,4 +1,4 @@
-FROM 10.0.12.207:32000/centos:7
+FROM 119.29.43.190:32000/centos:7
 MAINTAINER Hellwen <hellwen.wu@gmail.com>
 
 # 163 yum repos
@@ -14,10 +14,8 @@ RUN yum clean all; \
     yum install -y pwgen rsync net-tools sysstat bind-utils ntp
 
 # install term
-RUN yum install -y xterm && \
-    echo "# add by init" >> /etc/profile && \
-    echo "set -o vi" >> /etc/profile && \
-    echo "export TERM=xterm" >> /etc/profile
+RUN echo "# add by init" >> /etc/profile && \
+    echo "set -o vi" >> /etc/profile
 
 # start ntp
 RUN ntpd -q &
