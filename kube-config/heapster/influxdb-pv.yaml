@@ -1,0 +1,28 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: influxdb-storage-pvc
+  namespace: kube-system
+  labels:
+    kubernetes.io/cluster-service: "true"
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100G
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: kube-system-influxdb-storage-pv
+  labels:
+    kubernetes.io/cluster-service: "true"
+spec:
+  capacity:
+    storage: 100G
+  accessModes:
+    - ReadWriteOnce
+  nfs:
+    server: 192.168.72.128
+    path: "/data/influxdb-pv"
