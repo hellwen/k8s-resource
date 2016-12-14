@@ -1,7 +1,7 @@
 all: push
 
-TAG = 1.8.001
-PREFIX = k8s-registry.zeusis.com:32000/jre
+TAG = 0.12.001
+PREFIX = k8s-registry.zeusis.com:32000/influxdb
 
 container:
 	docker build -t $(PREFIX):$(TAG) .

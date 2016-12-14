@@ -1,9 +1,9 @@
-FROM 10.0.12.207:32000/centos:7.001
+FROM k8s-registry.zeusis.com:32000/centos:7.001
 MAINTAINER Hellwen <hellwen.wu@gmail.com>
 
 # java
 ENV JAVA_HOME  /usr/local/jre
-ADD tarballs/jre-8u101-linux-x64.tar.gz /usr/local
+ADD jre-8u101-linux-x64.tar.gz /usr/local
 RUN cd /usr/local && \
     ln -s jre1.8.0_101 jre && \
     echo "export JAVA_HOME=$JAVA_HOME" >> /etc/profile && \

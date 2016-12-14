@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
       - name: influxdb
-        image: kubernetes/heapster_influxdb:v0.6
+        image: k8s-registry.zeusis.com:32000/influxdb:0.12.001
         volumeMounts:
         - mountPath: /data
           name: influxdb-storage

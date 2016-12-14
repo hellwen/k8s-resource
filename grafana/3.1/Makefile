@@ -1,7 +1,7 @@
 all: push
 
-TAG = 1.8.001
-PREFIX = k8s-registry.zeusis.com:32000/jre
+TAG = 3.1.001
+PREFIX = k8s-registry.zeusis.com:32000/grafana
 
 container:
 	docker build -t $(PREFIX):$(TAG) .

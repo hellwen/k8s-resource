@@ -1,7 +1,7 @@
 all: push
 
-TAG = 7.002
-PREFIX = 119.29.43.190:32000/centos
+TAG = 7.001
+PREFIX = k8s-registry.zeusis.com:32000/centos
 
 container:
 	docker build -t $(PREFIX):$(TAG) .

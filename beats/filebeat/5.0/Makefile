@@ -1,7 +1,7 @@
 all: push
 
 TAG = 5.0.001
-PREFIX = 10.0.12.207:32000/kube-filebeat
+PREFIX = k8s-registry.zeusis.com:32000/kube-filebeat
 
 container:
 	docker build -t $(PREFIX):$(TAG) .
