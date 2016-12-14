@@ -19,4 +19,4 @@ spec:
         command:
         - /heapster
         - --source=kubernetes:http://192.168.72.40:6550?inClusterConfig=false
-        - --sink=influxdb:http://monitoring-influxdb.kube-system.svc.zeusis.com:8086
+        - --sink=influxdb:http://monitoring-influxdb.kube-system.svc.zeusis.local:8086

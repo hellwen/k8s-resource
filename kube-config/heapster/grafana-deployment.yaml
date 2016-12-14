@@ -16,7 +16,7 @@ spec:
         emptyDir: {}
       containers:
       - name: grafana
-        image: k8s-registry.zeusis.com:32000/heapster_grafana:3.1.001
+        image: k8s-registry.zeusis.com:32000/grafana:3.1.001
         ports:
           - containerPort: 3000
             protocol: TCP
