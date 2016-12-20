@@ -35,7 +35,8 @@ spec:
     spec:
       containers:
       - name: kubernetes-dashboard
-        image: index.docker.io/larry0208/kubernetes-dashboard-amd64-google:v1.4.2
+        # image: larry0208/kubernetes-dashboard-amd64-google:v1.4.2
+        image: k8s-registry.zeusis.com:32000/kubernetes-dashboard-amd64-google
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 9090
