@@ -14,7 +14,8 @@ spec:
     spec:
       containers:
       - name: heapster
-        image: kubernetes/heapster:canary
+        # image: kubernetes/heapster:canary
+        image: k8s-registry.zeusis.com:32000/heapster:canary
         imagePullPolicy: Always
         command:
         - /heapster
