@@ -6,7 +6,7 @@ spec:
   nodeSelector:
     type: virtual
   containers:
-  - image: 10.0.12.203:32000/busybox
+  - image: k8s-registry.zeusis.com:32000/busybox
     command:
       - sleep
       - "3600"

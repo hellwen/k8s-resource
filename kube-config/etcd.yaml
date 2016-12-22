@@ -6,7 +6,8 @@ metadata:
 spec:
   hostNetwork: true
   containers:
-  - image: gcr.io/google_containers/etcd:2.0.9
+  # - image: quay.io/coreos/etcd:v3.0.15
+  - image: k8s-registry.zeusis.com:32000/etcd:v3.0.15
     name: etcd-container
     command:
     - /usr/local/bin/etcd
