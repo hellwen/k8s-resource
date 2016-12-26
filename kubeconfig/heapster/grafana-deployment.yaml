@@ -11,18 +11,12 @@ spec:
         task: monitoring
         k8s-app: grafana
     spec:
-      volumes:
-      - name: grafana-storage
-        emptyDir: {}
       containers:
       - name: grafana
         image: k8s-registry.zeusis.com:32000/grafana:3.1.001
         ports:
           - containerPort: 3000
             protocol: TCP
-        volumeMounts:
-        - mountPath: /var
-          name: grafana-storage
         env:
         - name: INFLUXDB_HOST
           value: monitoring-influxdb
@@ -41,3 +35,9 @@ spec:
         - name: GF_SERVER_ROOT_URL
           # value: /api/v1/proxy/namespaces/kube-system/services/monitoring-grafana/
           value: /
+        #volumeMounts:
+        #- mountPath: /var
+        #  name: grafana-storage
+      #volumes:
+      #- name: grafana-storage
+      #  emptyDir: {}

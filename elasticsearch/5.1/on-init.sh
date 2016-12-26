@@ -10,15 +10,3 @@ transport.tcp.port: 9300
 EOF
 
 chown app:app $ES_HOME/config/elasticsearch.yml
-
-cat << EOF > $KIBANA_HOME/config/kibana.yml
-server.port: 5601
-server.host: 0.0.0.0
-
-elasticsearch.url: "http://localhost:9200"
-
-status.allowAnonymous: true
-pid.file: /data/kibana/pid
-EOF
-
-chown app:app $KIBANA_HOME/config/kibana.yml

@@ -1,8 +1,24 @@
 kind: Service
 apiVersion: v1
 metadata:
+  name: elasticsearch-node
+  namespace: default
+  labels:
+    app: elasticsearch
+spec:
+  type: NodePort
+  ports:
+  - port: 9200
+    name: es
+    nodePort: 32004
+  selector:
+    app: elasticsearch
+---
+kind: Service
+apiVersion: v1
+metadata:
   name: elasticsearch
-  namespace: development
+  namespace: default
   labels:
     app: elasticsearch
 spec:
@@ -21,7 +37,7 @@ apiVersion: apps/v1alpha1
 kind: PetSet
 metadata:
   name: elasticsearch
-  namespace: development
+  namespace: default
 spec:
   replicas: 1
   serviceName: elasticsearch
@@ -32,20 +48,14 @@ spec:
       labels:
         app: elasticsearch
     spec:
-      nodeSelector:
-        kubernetes.io/hostname: 10.0.12.207
       terminationGracePeriodSeconds: 0
       containers:
       - name: elasticsearch
-        image: 10.0.12.207:32000/elasticsearch:5.0.001
-        imagePullPolicy: Always
+        image: k8s-registry.zeusis.com:32000/elasticsearch:5.1.001
         resources:
           limits:
             cpu: 1000m
-            memory: 4000Mi
-          requests:
-            cpu: 1000m
-            memory: 4000Mi
+            memory: 2000Mi
         securityContext:
           privileged: true
         env:

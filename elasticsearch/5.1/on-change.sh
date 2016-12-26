@@ -50,11 +50,9 @@ echo "i  am  is: ${MY_HOSTNAME}"
 echo "master is: ${MASTER}"
 
 echo "########### es stop"
-/usr/local/kibana-stop.sh
 /usr/local/es-stop.sh
 
 echo "########### es start"
 /usr/local/es-start.sh
-/usr/local/kibana-start.sh
 
 echo "########### finished"

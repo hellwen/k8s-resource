@@ -24,5 +24,5 @@ spec:
   accessModes:
     - ReadWriteOnce
   nfs:
-    server: 192.168.72.128
+    server: 192.168.72.157
     path: "/data/influxdb-pv"

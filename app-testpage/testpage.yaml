@@ -1,0 +1,38 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: testpage
+  namespace: default
+  labels:
+    type: testpage
+spec:
+  type: NodePort
+  ports:
+  - port: 8080
+  selector:
+    type: testpage
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: testpage
+  namespace: default
+  labels:
+    type: testpage
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        type: testpage
+    spec:
+      containers:
+      - name: testpage
+        image: k8s-registry.zeusis.com:32000/testpage:0.1
+        imagePullPolicy: Always
+        resources:
+          limits:
+            cpu: 100m
+            memory: 50Mi
+        ports:
+        - containerPort: 8080

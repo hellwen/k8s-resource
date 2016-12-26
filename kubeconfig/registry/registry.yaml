@@ -16,35 +16,6 @@ spec:
     targetPort: 5000
     nodePort: 32000
 ---
-kind: PersistentVolumeClaim
-apiVersion: v1
-metadata:
-  name: kube-registry-pvc
-  namespace: kube-system
-  labels:
-    kubernetes.io/cluster-service: "true"
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 100G
----
-kind: PersistentVolume
-apiVersion: v1
-metadata:
-  name: kube-system-kube-registry-pv
-  labels:
-    kubernetes.io/cluster-service: "true"
-spec:
-  capacity:
-    storage: 100G
-  accessModes:
-    - ReadWriteOnce
-  nfs:
-    server: 192.168.72.128
-    path: "/data/registry-pv"
----
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
