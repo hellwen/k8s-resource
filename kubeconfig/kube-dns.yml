@@ -10,7 +10,7 @@ metadata:
 spec:
   selector:
     k8s-app: kube-dns
-  clusterIP: ${DNS_SERVICE_IP}
+  clusterIP: 182.1.0.100
   ports:
   - name: dns
     port: 53
@@ -22,11 +22,10 @@ spec:
 apiVersion: v1
 kind: ReplicationController
 metadata:
-  name: kube-dns-v20
+  name: kube-dns
   namespace: kube-system
   labels:
     k8s-app: kube-dns
-    version: v20
     kubernetes.io/cluster-service: "true"
 spec:
   replicas: 1
@@ -44,22 +43,16 @@ spec:
     spec:
       containers:
       - name: kubedns
-        image: gcr.io/google_containers/kubedns-amd64:1.8
+        # image: gcr.io/google_containers/kubedns-amd64:1.8
+        # image: mritd/kubedns-amd64:1.9
+        # image: swqmaven/kubedns-amd64:1.8
+        image: k8s-registry.zeusis.com:32000/kubedns-amd64:1.8
         resources:
           limits:
             memory: 170Mi
           requests:
             cpu: 100m
             memory: 70Mi
-        livenessProbe:
-          httpGet:
-            path: /healthz-kubedns
-            port: 8080
-            scheme: HTTP
-          initialDelaySeconds: 60
-          timeoutSeconds: 5
-          successThreshold: 1
-          failureThreshold: 5
         readinessProbe:
           httpGet:
             path: /readiness
@@ -68,6 +61,8 @@ spec:
           initialDelaySeconds: 3
           timeoutSeconds: 5
         args:
+        # command = "/kube-dns"
+        - --kube-master-url=http://192.168.61.2:6550
         - --domain=cluster.local.
         - --dns-port=10053
         ports:
@@ -78,16 +73,9 @@ spec:
           name: dns-tcp-local
           protocol: TCP
       - name: dnsmasq
-        image: gcr.io/google_containers/kube-dnsmasq-amd64:1.4
-        livenessProbe:
-          httpGet:
-            path: /healthz-dnsmasq
-            port: 8080
-            scheme: HTTP
-          initialDelaySeconds: 60
-          timeoutSeconds: 5
-          successThreshold: 1
-          failureThreshold: 5
+        # image: gcr.io/google_containers/kube-dnsmasq-amd64:1.4
+        # image: mritd/kube-dnsmasq-amd64:1.4
+        image: k8s-registry.zeusis.com:32000/kube-dnsmasq-amd64:1.4
         args:
         - --cache-size=1000
         - --no-resolv
@@ -101,7 +89,9 @@ spec:
           name: dns-tcp
           protocol: TCP
       - name: healthz
-        image: gcr.io/google_containers/exechealthz-amd64:1.2
+        # image: gcr.io/google_containers/exechealthz-amd64:1.2
+        # image: mritd/exechealthz-amd64:1.2
+        image: k8s-registry.zeusis.com:32000/exechealthz-amd64:1.2
         resources:
           limits:
             memory: 50Mi

@@ -21,7 +21,7 @@ spec:
             memory: 50Mi
         env:
           - name: ELASTICSEARCH_HOSTS
-            value: "elasticsearch.default.svc.zeusis.local:9200"
+            value: "elasticsearch.default.svc.cluster.local:9200"
           - name: LOG_LEVEL
             value: info
         volumeMounts:

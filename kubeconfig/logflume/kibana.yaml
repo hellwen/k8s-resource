@@ -35,4 +35,4 @@ spec:
             memory: 2000Mi
         env:
           - name: ELASTICSEARCH_URL
-            value: "http://elasticsearch.default.svc.zeusis.local:9200"
+            value: "http://elasticsearch.default.svc.cluster.local:9200"

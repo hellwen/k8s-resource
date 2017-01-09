@@ -33,6 +33,6 @@ spec:
         resources:
           limits:
             cpu: 100m
-            memory: 50Mi
+            memory: 200Mi
         ports:
         - containerPort: 8080
