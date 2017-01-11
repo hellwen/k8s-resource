@@ -13,7 +13,8 @@ spec:
     spec:
       containers:
       - name: influxdb
-        image: k8s-registry.zeusis.com:32000/influxdb:0.12.001
+        image: k8s-registry.zeusis.com:32000/influxdb:1.1.001
+        imagePullPolicy: Always
         volumeMounts:
         - mountPath: /data
           name: influxdb-storage
