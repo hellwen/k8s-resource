@@ -22,5 +22,11 @@ spec:
     port: 8086
     targetPort: 8086
     nodePort: 32003
+    protocol: TCP
+  - name: api-udp
+    port: 8086
+    targetPort: 8086
+    nodePort: 32003
+    protocol: UDP
   selector:
     k8s-app: influxdb

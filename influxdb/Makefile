@@ -1,6 +1,6 @@
 all: push
 
-TAG = 0.12.001
+TAG = 1.1.001
 PREFIX = k8s-registry.zeusis.com:32000/influxdb
 
 container:
