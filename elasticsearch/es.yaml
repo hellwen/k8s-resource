@@ -73,6 +73,8 @@ spec:
         - name: ssh-key
           mountPath: /.ssh
           readOnly: true
+        - mountPath: /data
+          name: es-storage
       volumes:
       - name: ssh-key
         secret:
@@ -84,3 +86,7 @@ spec:
             path: id_rsa
           - key: id-rsa.pub
             path: id_rsa.pub
+      - name: es-storage
+        persistentVolumeClaim:
+          claimName: es-storage-pvc
+
