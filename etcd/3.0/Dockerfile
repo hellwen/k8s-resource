@@ -10,14 +10,14 @@ RUN apk --no-cache add tzdata \
     && echo "Asia/Shanghai" > /etc/timezone \
     && apk del tzdata
 
-# RUN cd /tmp && \
-    # apk --no-cache add wget && \
-    # wget --no-check-certificate https://github.com/coreos/etcd/releases/download/${ETCD_VERSION}/etcd-${ETCD_VERSION}-linux-amd64.tar.gz && \
-    # tar xzf etcd-${ETCD_VERSION}-linux-amd64.tar.gz && \
-    # cp etcd-${ETCD_VERSION}-linux-amd64/etcd /usr/local/bin && \
-    # rm -rf etcd-${ETCD_VERSION}-linux-amd64 && \
-    # apk del wget
+RUN cd /tmp && \
+    apk --no-cache add wget && \
+    wget --no-check-certificate https://github.com/coreos/etcd/releases/download/${ETCD_VERSION}/etcd-${ETCD_VERSION}-linux-amd64.tar.gz && \
+    tar xzf etcd-${ETCD_VERSION}-linux-amd64.tar.gz && \
+    cp etcd-${ETCD_VERSION}-linux-amd64/etcd /usr/local/bin && \
+    rm -rf etcd-${ETCD_VERSION}-linux-amd64 && \
+    apk del wget
 
-ADD etcd /usr/local/bin/etcd
+# ADD etcd /usr/local/bin/etcd
 
 CMD ["etcd", "--version"]
