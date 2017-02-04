@@ -1,7 +1,7 @@
 all: push
 
-TAG = 1.1.001
-PREFIX = k8s-registry.zeusis.com:32000/influxdb
+TAG = 0.1
+PREFIX = k8s-registry.zeusis.com:32000/kapacitor-alert-api
 
 container:
 	docker build -t $(PREFIX):$(TAG) .

@@ -89,4 +89,3 @@ spec:
       - name: es-storage
         persistentVolumeClaim:
           claimName: es-storage-pvc
-

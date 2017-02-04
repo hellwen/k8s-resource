@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: kapacitor-alert-api
+  namespace: default
+spec:
+  ports:
+  - name: http
+    port: 3000
+  selector:
+    app: kapacitor-alert-api
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: kapacitor-alert-api
+  namespace: default
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: kapacitor-alert-api
+    spec:
+      containers:
+      - name: kapacitor-alert-api
+        image: k8s-registry.zeusis.com:32000/kapacitor-alert-api:0.1
+        imagePullPolicy: Always
+        env:
+        - name: MSG_TOS
+          value: "2"
+        - name: MSG_URL
+          value: "http://monitor.zeusis.com:8082/alarm/send"

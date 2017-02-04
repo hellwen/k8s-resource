@@ -1,0 +1,17 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: monitoring-kapacitor
+  namespace: kube-system
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        task: monitoring
+        k8s-app: kapacitor
+    spec:
+      containers:
+      - name: kapacitor
+        image: k8s-registry.zeusis.com:32000/kapacitor:1.2.001
+        imagePullPolicy: Always
