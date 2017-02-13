@@ -15,8 +15,8 @@ spec:
       containers:
       - name: heapster
         image: k8s-registry.zeusis.com:32000/heapster:v1.2.0
-        imagePullPolicy: Always
         command:
         - /heapster
         - --source=kubernetes:http://192.168.61.2:6550?inClusterConfig=false
-        - --sink=influxdb:http://monitoring-influxdb.kube-system.svc.cluster.local:8086
+        # - --source=kubernetes:https://kubernetes.default
+        - --sink=influxdb:http://monitoring-influxdb:8086
