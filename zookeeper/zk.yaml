@@ -19,7 +19,7 @@ kind: ConfigMap
 metadata:
   name: zk-config
 data:
-  ensemble: "zk-0;zk-1;zk-2"
+  ensemble: "zk-0 zk-1 zk-2"
   jvm.heap: "2G"
   tick: "2000"
   init: "10"
@@ -119,22 +119,6 @@ spec:
           value: "2888"
         - name: ZK_ELECTION_PORT
           value: "3888"
-        command:
-        - sh
-        - -c
-        - zkGenConfig.sh && zkServer.sh start-foreground
-        readinessProbe:
-          exec:
-            command:
-            - "zkOk.sh"
-          initialDelaySeconds: 15
-          timeoutSeconds: 5
-        livenessProbe:
-          exec:
-            command:
-            - "zkOk.sh"
-          initialDelaySeconds: 15
-          timeoutSeconds: 5
       securityContext:
         runAsUser: 1000
         fsGroup: 1000

@@ -33,6 +33,21 @@ RUN cd /usr/local && \
 
 ENV PATH $PATH:$ZK_HOME/bin
 
-COPY zkGenConfig.sh zkOk.sh zkMetrics.sh $ZK_HOME/bin/
+ENV ZK_CFG=$ZK_HOME/conf/zoo.cfg
 
-CMD ["zkGenConfig.sh"]
+ENV ZK_USER=zookeeper
+
+ENV ZK_DATA_DIR=/data/zk/data
+ENV ZK_LOG_DIR=/data/zk/log
+ENV ZK_MYID=$ZK_DATA_DIR/myid
+
+RUN mkdir -p $ZK_DATA_DIR && \
+    mkdir -p $ZK_LOG_DIR && \
+    touch $ZK_CFG && \
+    touch $ZK_MYID && \
+    useradd $ZK_USER && \
+    chown -R $ZK_USER:$ZK_USER $ZK_HOME $ZK_DATA_DIR $ZK_LOG_DIR $ZK_MYID
+
+COPY bootstrap.sh zkOk.sh zkMetrics.sh $ZK_HOME/bin/
+
+CMD ["bootstrap.sh"]
