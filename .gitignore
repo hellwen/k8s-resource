@@ -3,3 +3,4 @@
 *.tar
 *.jar
 *.rpm
+.*.swp
