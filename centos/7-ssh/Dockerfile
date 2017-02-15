@@ -8,9 +8,9 @@ ADD CentOS-Base-163.repo /etc/yum.repos.d/CentOS-Base.repo
 RUN cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 
 # install dev tools
-RUN yum clean all && \
-    rpm --rebuilddb && \
-    yum install -y which tar sudo openssh-server openssh-clients epel-release && \
+RUN yum clean all; \
+    rpm --rebuilddb; \
+    yum install -y which tar sudo openssh-server openssh-clients epel-release; \
     yum install -y pwgen rsync net-tools sysstat bind-utils ntp
 
 # install term
@@ -19,6 +19,19 @@ RUN echo "# add by init" >> /etc/profile && \
 
 # start ntp
 RUN ntpd -q &
+
+# passwordless ssh
+RUN rm -f /etc/ssh/ssh_host_ecdsa_key /etc/ssh/ssh_host_rsa_key && \
+    ssh-keygen -q -N "" -t dsa -f /etc/ssh/ssh_host_ecdsa_key && \
+    ssh-keygen -q -N "" -t ed25519 -f /etc/ssh/ssh_host_ed25519_key && \
+    ssh-keygen -q -N "" -t rsa -f /etc/ssh/ssh_host_rsa_key && \
+    ssh-keygen -q -N "" -t rsa -f /root/.ssh/id_rsa && \
+    echo "UsePAM no" >> /etc/ssh/sshd_config && \
+    echo "Port 2122" >> /etc/ssh/sshd_config && \
+    echo "UserKnownHostsFile /dev/null" >> /etc/ssh/ssh_config && \
+    echo "StrictHostKeyChecking no" >> /etc/ssh/ssh_config && \
+    echo "LogLevel quiet" >> /etc/ssh/ssh_config && \
+    echo "Port 2122" >> /etc/ssh/ssh_config
 
 # gosu
 ENV GOSU_VERSION="1.7"
@@ -38,4 +51,13 @@ RUN set -x \
     && rm -rf /root/.gnupg
 
 # add files
-COPY peer-finder set_root_pw.sh /
+ADD peer-finder /peer-finder
+ADD init.sh /init.sh
+ADD set_root_pw.sh /set_root_pw.sh
+RUN chmod +x /peer-finder && \
+    chmod +x /init.sh && \
+    chmod +x /set_root_pw.sh
+
+ENTRYPOINT ["/init.sh"]
+
+EXPOSE 2122

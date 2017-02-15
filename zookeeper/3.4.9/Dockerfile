@@ -1,30 +1,38 @@
-FROM 10.0.12.207:32000/jre:1.8.001
+FROM k8s-registry.zeusis.com:32000/java:8.001
 MAINTAINER Hellwen <hellwen.wu@gmail.com>
 
-# zookeeper
-ADD tarballs/zookeeper-3.4.9.tar.gz /usr/local
+RUN yum install -y wget && yum clean all
 
-ENV ZK_HOME /usr/local/zk
+# zookeeper
+ENV ZK_VERSION=3.4.9
+ENV ZK_HOME=/usr/local/zk
 RUN cd /usr/local && \
-    ln -s zookeeper-3.4.9 zk && \
+    wget "http://apache.mirrors.hoobly.com/zookeeper/zookeeper-$ZK_VERSION/zookeeper-$ZK_VERSION.tar.gz" && \
+    tar -zxf zookeeper-$ZK_VERSION.tar.gz && \
+    mv zookeeper-$ZK_VERSION zk && \
+    rm -rf zookeeper-$ZK_VERSION.tar.gz \
+    $ZK_HOME/CHANGES.txt \
+    $ZK_HOME/README.txt \
+    $ZK_HOME/NOTICE.txt \
+    $ZK_HOME/CHANGES.txt \
+    $ZK_HOME/README_packaging.txt \
+    $ZK_HOME/build.xml \
+    $ZK_HOME/config \
+    $ZK_HOME/contrib \
+    $ZK_HOME/dist-maven \
+    $ZK_HOME/docs \
+    $ZK_HOME/ivy.xml \
+    $ZK_HOME/ivysettings.xml \
+    $ZK_HOME/recipes \
+    $ZK_HOME/src \
+    $ZK_HOME/zookeeper-$ZK_VERSION.jar.asc \
+    $ZK_HOME/zookeeper-$ZK_VERSION.jar.md5 \
+    $ZK_HOME/zookeeper-$ZK_VERSION.jar.sha1 && \
     echo "export ZK_HOME=$ZK_HOME" >> /etc/profile && \
     echo "export PATH=\$PATH:\$ZK_HOME/bin" >> /etc/profile
 
-ADD on-init.sh /usr/local/on-init.sh
-ADD on-change.sh /usr/local/on-change.sh
-RUN chmod +x /usr/local/*.sh
+ENV PATH $PATH:$ZK_HOME/bin
 
-# on bootstrap
-ADD bootstrap.sh /bootstrap.sh
-RUN chmod +x /bootstrap.sh
+COPY zkGenConfig.sh zkOk.sh zkMetrics.sh $ZK_HOME/bin/
 
-ENTRYPOINT ["/bootstrap.sh"]
-
-# ssh ports
-EXPOSE 2122
-# zk
-EXPOSE 2181
-# peer
-EXPOSE 2191
-# leader-election
-EXPOSE 2192
+CMD ["zkGenConfig.sh"]

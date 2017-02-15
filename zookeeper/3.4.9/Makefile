@@ -1,7 +1,7 @@
 all: push
 
 TAG = 3.4.9.001
-PREFIX = 10.0.12.207:32000/zookeeper
+PREFIX = k8s-registry.zeusis.com:32000/zookeeper
 
 container:
 	docker build -t $(PREFIX):$(TAG) .
