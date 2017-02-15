@@ -1,6 +1,32 @@
 kind: Service
 apiVersion: v1
 metadata:
+  name: hbase-node
+  namespace: development
+  labels:
+    app: hbase
+spec:
+  type: NodePort
+  ports:
+  - port: 8088
+    name: yarn
+    nodePort: 30001
+  - port: 16010
+    name: hbase-master
+    nodePort: 30002
+  - port: 9090
+    name: hbase-thrift
+    nodePort: 30003
+  - port: 8090
+    name: hbase-rest
+    nodePort: 30004
+  selector:
+  selector:
+    app: hbase
+---
+kind: Service
+apiVersion: v1
+metadata:
   name: hbase
   namespace: development
   labels:

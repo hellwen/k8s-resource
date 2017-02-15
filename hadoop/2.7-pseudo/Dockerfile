@@ -1,13 +1,23 @@
 FROM k8s-registry.zeusis.com:32000/java:8.001
 MAINTAINER Hellwen <hellwen.wu@gmail.com>
 
+RUN yum install -y ssh pdsh && \
+    ssh-keygen -t rsa -P '' -f ~/.ssh/id_rsa && \
+    cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys && \
+    chmod 0600 ~/.ssh/authorized_keys && \
+    yum clean all
+
 # hadoop
 ENV HADOOP_VERSION 2.7.3
 ENV HADOOP_PREFIX /usr/local/hadoop
 ENV HADOOP_HOME   /usr/local/hadoop
-RUN cd /usr/local && \
-    wget http://www.apache.org/dyn/closer.cgi/hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz && \
-    ln -s hadoop-$HADOOP_VERSION hadoop && \
+
+RUN yum install -y wget && \
+    cd /usr/local && \
+    wget http://apache.mirrors.tds.net/hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz && \
+    tar -zxf hadoop-$HADOOP_VERSION.tar.gz && \
+    mv hadoop-$HADOOP_VERSION hadoop && \
+    rm -f hadoop-$HADOOP_VERSION.tar.gz && \
     echo "export HADOOP_PREFIX=$HADOOP_PREFIX" >> /etc/profile && \
     echo "export HADOOP_HOME=$HADOOP_HOME" >> /etc/profile && \
     echo "export HADOOP_COMMON_HOME=$HADOOP_HOME" >> /etc/profile && \
@@ -16,19 +26,16 @@ RUN cd /usr/local && \
     echo "export HADOOP_YARN_HOME=$HADOOP_HOME" >> /etc/profile && \
     echo "export HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop" >> /etc/profile && \
     echo "export YARN_CONF_DIR=$HADOOP_HOME/etc/hadoop" >> /etc/profile && \
-    echo "export PATH=\$PATH:\$HADOOP_HOME/bin" >> /etc/profile
+    echo "export PATH=\$PATH:\$HADOOP_HOME/bin" >> /etc/profile && \
+    yum clean all && yum remove -y wget
 
-ADD hadoop-init.sh  /usr/local/hadoop-init.sh
-ADD hadoop-start.sh /usr/local/hadoop-start.sh
-ADD hadoop-stop.sh  /usr/local/hadoop-stop.sh
-ADD on-change.sh  /usr/local/on-change.sh
-RUN chmod +x /usr/local/*.sh
+COPY entrypoint.sh /
+COPY core-site.xml hdfs-site.xml $HADOOP_HOME/etc/hadoop/
 
-# script
-ADD bootstrap.sh /bootstrap.sh
-RUN chmod +x /bootstrap.sh
+RUN mkdir -p /data/hdfs/namenode && \
+    mkdir -p /data/hdfs/datanode
 
-ENTRYPOINT ["/bootstrap.sh"]
+CMD ["/entrypoint.sh"]
 
 # Hdfs ports
 EXPOSE 50010 50020 50070 50470 50075 50475 50090 8020 8019 8485 8480

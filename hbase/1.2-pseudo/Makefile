@@ -1,6 +1,6 @@
 all: push
 
-TAG = 1.2-alone.001
+TAG = 1.2-pseudo.001
 PREFIX = k8s-registry.zeusis.com:32000/hbase
 
 container:
