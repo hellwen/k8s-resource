@@ -14,7 +14,7 @@ ENV HADOOP_HOME   /usr/local/hadoop
 
 RUN yum install -y wget && \
     cd /usr/local && \
-    wget http://apache.mirrors.tds.net/hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz && \
+    wget http://apache.claz.org/hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz && \
     tar -zxf hadoop-$HADOOP_VERSION.tar.gz && \
     mv hadoop-$HADOOP_VERSION hadoop && \
     rm -f hadoop-$HADOOP_VERSION.tar.gz && \
