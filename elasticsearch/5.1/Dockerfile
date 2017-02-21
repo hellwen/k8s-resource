@@ -1,19 +1,32 @@
-FROM k8s-registry.zeusis.com:32000/jre:1.8.001
+FROM k8s-registry.zeusis.com:32000/java:8.001
 MAINTAINER Hellwen <hellwen.wu@gmail.com>
 
 # add user
-RUN groupadd -g 6110 app && useradd -u 6110 -g app app
-
-# install package
-ADD elasticsearch-5.1.1.tar.gz /usr/local
+RUN groupadd es
 
 # es
+ENV ES_VERSION 5.1.1
 ENV ES_HOME /usr/local/es
+
 RUN cd /usr/local && \
-    ln -s elasticsearch-5.1.1 es && \
-    chown -R app:app elasticsearch-5.1.1 && \
+    wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-${ES_VERSION}.tar.gz && \
+    mkdir es && \
+    tar -zxf elasticsearch-${ES_VERSION}.tar.gz -C es && \
+    rm -f elasticsearch-${ES_VERSION}.tar.gz && \
+    chown -R es:es es && \
     echo "export ES_HOME=$ES_HOME" >> /etc/profile && \
-    echo "export PATH=\$PATH:\$ES_HOME/bin" >> /etc/profile
+    echo "export PATH=\$PATH:\$ES_HOME/bin" >> /etc/profile && \
+    yum clean all && yum remove -y wget
+
+COPY entrypoint.sh /
+COPY hbase-site.xml $HBASE_HOME/conf/
+
+RUN mkdir -p /data/hbase && \
+    mkdir -p /data/zookeeper
+
+EXPOSE 9200 9300
+
+CMD ["/entrypoint.sh"]
 
 ADD es-start.sh   /usr/local/es-start.sh
 ADD es-stop.sh    /usr/local/es-stop.sh
@@ -31,7 +44,4 @@ VOLUME /data
 
 ENTRYPOINT ["/bootstrap.sh"]
 
-# es
-EXPOSE 9200 9300
-# ssh
-EXPOSE 2122
+

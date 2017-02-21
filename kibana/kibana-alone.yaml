@@ -1,0 +1,54 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: kibana
+  namespace: kube-system
+  labels:
+    app: kibana
+spec:
+  type: nodePort
+  ports:
+  - port: 56001
+    nodePort: 32003
+    name: kibana
+  selector:
+    app: kibana
+---
+apiVersion: apps/v1alpha1
+kind: Deployment
+metadata:
+  name: kibana
+  namespace: kube-system
+spec:
+  replicas: 1
+  serviceName: elasticsearch
+  template:
+    metadata:
+      annotations:
+        pod.alpha.kubernetes.io/initialized: "true"
+      labels:
+        app: elasticsearch
+    spec:
+      containers:
+      - name: elasticsearch
+        image: k8s-registry.zeusis.com:32000/kibana:5.0
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 4000Mi
+          requests:
+            cpu: 1000m
+            memory: 4000Mi
+        securityContext:
+          privileged: true
+        env:
+        - name: NAMESPACE
+          value: "development"
+        - name: SERVICE
+          value: "elasticsearch"
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        args:
+        - -d
