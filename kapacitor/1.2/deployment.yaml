@@ -1,0 +1,20 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: kapacitor
+  namespace: monitoring
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        task: monitoring
+        k8s-app: kapacitor
+    spec:
+      containers:
+      - name: kapacitor
+        image: k8s-registry.zeusis.com:32000/zs/kapacitor:1.2
+        imagePullPolicy: Always
+        env:
+          - name: INFLUXDB_URLS
+            value: "http://influxdb:8086"

@@ -1,0 +1,27 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: elasticsearch-prd
+  namespace: monitoring
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: elasticsearch-prd
+    spec:
+      containers:
+      - name: elasticsearch
+        image: k8s-registry.zeusis.com:32000/zs/elasticsearch:5.1-alone
+        imagePullPolicy: Always
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 4000Mi
+        volumeMounts:
+        - mountPath: /data
+          name: elasticsearch-pvc
+      volumes:
+      - name: elasticsearch-pvc
+        persistentVolumeClaim:
+          claimName: elasticsearch-pvc-prd

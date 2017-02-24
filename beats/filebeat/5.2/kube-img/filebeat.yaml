@@ -1,0 +1,26 @@
+filebeat:
+  prospectors:
+    - input_type: log
+      paths:
+      - "/var/log/etcd/*.log"
+      tags:
+      - "etcd"
+    - input_type: log
+      paths:
+      - "/var/log/kubernetes/*.log"
+      tags:
+      - "kubernetes"
+
+output:
+  elasticsearch:
+    hosts: ["${ELASTICSEARCH_HOSTS}"]
+    index: "${ELASTICSEARCH_INDEX}-%{+YYYY.MM.dd}"
+    template:
+      enabled: true
+      versions.2x.enabled: false
+      name: "filebeat"
+      path: "${BEATS_HOME}/filebeat.template.json"
+      overwrite: false
+
+logging:
+  level: ${LOG_LEVEL:error}

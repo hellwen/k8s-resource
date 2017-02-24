@@ -1,0 +1,28 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: influxdb-prd
+  namespace: monitoring
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        task: monitoring
+        k8s-app: influxdb-prd
+    spec:
+      containers:
+      - image: k8s-registry.zeusis.com:32000/zs/influxdb:1.2
+        name: influxdb
+        imagePullPolicy: Always
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 2000Mi
+        volumeMounts:
+        - mountPath: /data
+          name: influxdb-storage
+      volumes:
+      - name: influxdb-storage
+        persistentVolumeClaim:
+          claimName: influxdb-storage-pvc-prd

@@ -1,4 +1,4 @@
-FROM golang:1.7-alpine
+FROM k8s-registry.zeusis.com:32000/golang:1.7-alpine
 
 # Set the timezone
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories \
@@ -7,9 +7,6 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositorie
     && echo "Asia/Shanghai" > /etc/timezone \
     && apk del tzdata
 
-ENV MSG_TOS 0
-ENV MSG_URL http://xx/alarm/send
-
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories && \
     apk add --no-cache git && \
     cd $GOPATH/src/ && \
@@ -17,6 +14,9 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositorie
     cd app && \
     go get -v -d && \
     go install -v
+
+ENV MSG_TOS 0
+ENV MSG_URL http://xx/alarm/send
 
 EXPOSE 3000
 

@@ -1,0 +1,38 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: grafana
+  namespace: monitoring
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        task: monitoring
+        k8s-app: grafana
+    spec:
+      containers:
+      - name: grafana
+        #image: k8s-registry.zeusis.com:32000/zs/grafana:4.1
+        image: k8s-registry.zeusis.com:32000/grafana:4.1
+        ports:
+          - containerPort: 3000
+            protocol: TCP
+        env:
+        #- name: GF_AUTH_BASIC_ENABLED
+        #  value: "false"
+        #- name: GF_AUTH_ANONYMOUS_ENABLED
+        #  value: "true"
+        #- name: GF_AUTH_ANONYMOUS_ORG_ROLE
+        #  value: Admin
+        - name: GF_SECURITY_ADMIN_USER
+          value: dean
+        - name: GF_SECURITY_ADMIN_PASSWORD
+          value: dean.wu
+        volumeMounts:
+        - mountPath: /var/lib/grafana
+          name: grafana-storage
+      volumes:
+      - name: grafana-storage
+        persistentVolumeClaim:
+          claimName: grafana-storage-pvc

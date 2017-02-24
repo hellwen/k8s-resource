@@ -1,7 +1,10 @@
 all: push
 
-TAG = 0.1
-PREFIX = k8s-registry.zeusis.com:32000/zs/kapacitor-alert-api
+PWD = $(shell cd ../; pwd)
+DIR = $(notdir $(PWD))
+TAG = $(DIR)
+
+PREFIX = k8s-registry.zeusis.com:32000/zs/filebeat
 
 container:
 	docker build -t $(PREFIX):$(TAG) .

@@ -1,0 +1,14 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: elasticsearch-prd
+  namespace: monitoring
+  labels:
+    app: elasticsearch-prd
+spec:
+  type: NodePort
+  ports:
+  - port: 9200
+    nodePort: 32004
+  selector:
+    app: elasticsearch-prd
