@@ -1,0 +1,46 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  name: telegraf
+  namespace: monitoring
+spec:
+  template:
+    metadata:
+      labels:
+        app: telegraf
+    spec:
+      containers:
+        - name: telegraf
+          image: quay.io/org/image:latest
+          imagePullPolicy: IfNotPresent
+          env:
+          - name: POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: "HOST_PROC"
+            value: "/rootfs/proc"
+          - name: "HOST_SYS"
+            value: "/rootfs/sys"
+          volumeMounts:
+          - name: sysro
+            mountPath: /rootfs/sys
+            readOnly: true
+          - name: procro
+            mountPath: /rootfs/proc
+            readOnly: true
+          - name: varrunutmpro
+            mountPath: /var/run/utmp
+            readOnly: true
+          - name: logger-redis-creds
+            mountPath: /var/run/secrets/deis/redis/creds
+      volumes:
+      - name: sysro
+        hostPath:
+          path: /sys
+      - name: procro
+        hostPath:
+          path: /proc
+      - name: varrunutmpro
+        hostPath:
+          path: /var/run/utmp

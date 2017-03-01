@@ -35,6 +35,27 @@ spec:
         - name: varlibdockercontainers
           mountPath: /var/lib/docker/containers
           readOnly: true
+      - name: filebeat-kube
+        image: k8s-registry.zeusis.com:32000/zs/kube-filebeat:5.2
+        imagePullPolicy: Always
+        resources:
+          limits:
+            cpu: 50m
+            memory: 50Mi
+        env:
+          - name: ELASTICSEARCH_HOSTS
+            value: "192.168.61.2:32004"
+          - name: LOG_LEVEL
+            value: info
+          - name: ELASTICSEARCH_INDEX
+            value: kube
+        volumeMounts:
+        - name: tz-config
+          mountPath: /etc/localtime
+        - name: varlogetcd
+          mountPath: /var/log/etcd
+        - name: varlogkubernetes
+          mountPath: /var/log/kubernetes
       volumes:
       - name: tz-config
         hostPath:
@@ -45,3 +66,9 @@ spec:
       - name: varlibdockercontainers
         hostPath:
           path: /var/lib/docker/containers
+      - name: varlogetcd
+        hostPath:
+          path: /var/log/etcd
+      - name: varlogkubernetes
+        hostPath:
+          path: /var/log/kubernetes
