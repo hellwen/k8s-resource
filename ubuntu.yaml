@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-ubuntu
+spec:
+  nodeSelector:
+    type: virtual
+  containers:
+  - name: my-ubuntu
+    image: 10.0.12.203:32000/ubuntu:16.10
+    imagePullPolicy: Always
+    args:
+    - -d

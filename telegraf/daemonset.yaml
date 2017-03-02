@@ -11,8 +11,8 @@ spec:
     spec:
       containers:
         - name: telegraf
-          image: quay.io/org/image:latest
-          imagePullPolicy: IfNotPresent
+          image: k8s-registry.zeusis.com:32000/zs/telegraf:1.2
+          imagePullPolicy: Always
           env:
           - name: POD_NAMESPACE
             valueFrom:
@@ -32,8 +32,6 @@ spec:
           - name: varrunutmpro
             mountPath: /var/run/utmp
             readOnly: true
-          - name: logger-redis-creds
-            mountPath: /var/run/secrets/deis/redis/creds
       volumes:
       - name: sysro
         hostPath:
