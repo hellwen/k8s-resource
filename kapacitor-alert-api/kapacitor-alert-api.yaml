@@ -28,6 +28,6 @@ spec:
         imagePullPolicy: Always
         env:
         - name: MSG_TOS
-          value: "2"
+          value: "5"
         - name: MSG_URL
           value: "http://monitor.zeusis.com:8082/alarm/send"

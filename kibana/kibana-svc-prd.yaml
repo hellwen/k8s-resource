@@ -1,0 +1,14 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: kibana-prd
+  namespace: monitoring
+  labels:
+    app: kibana-prd
+spec:
+  type: NodePort
+  ports:
+  - port: 5601
+    nodePort: 32005
+  selector:
+    app: kibana-prd

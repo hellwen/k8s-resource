@@ -8,4 +8,5 @@ spec:
     image: k8s-registry.zeusis.com:32000/centos:7
     imagePullPolicy: Always
     command:
-    - sleep 100
+      - sleep
+      - "3600"

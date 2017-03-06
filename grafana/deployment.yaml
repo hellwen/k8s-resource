@@ -29,6 +29,8 @@ spec:
           value: dean
         - name: GF_SECURITY_ADMIN_PASSWORD
           value: dean.wu
+        #- name: GF_SERVER_ROOT_URL
+        #  value: "%(protocol)s://%(domain)s:%(http_port)s/grafana"
         volumeMounts:
         - mountPath: /var/lib/grafana
           name: grafana-storage

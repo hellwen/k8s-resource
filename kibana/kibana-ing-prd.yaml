@@ -1,0 +1,14 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: kibana
+  namespace: monitoring
+spec:
+  rules:
+  - host: k8s-ingress-t.zeusis.com
+    http:
+      paths:
+      - path: /kibana-prd
+        backend:
+          serviceName: kibana-prd
+          servicePort: 5601

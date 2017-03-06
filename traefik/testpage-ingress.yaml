@@ -1,0 +1,14 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: testpage
+  namespace: default
+spec:
+  rules:
+  - host: k8s-ingress-t.zeusis.com
+    http:
+      paths:
+      - path: /testpage
+        backend:
+          serviceName: testpage
+          servicePort: http

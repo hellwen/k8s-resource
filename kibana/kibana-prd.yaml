@@ -1,18 +1,3 @@
-kind: Service
-apiVersion: v1
-metadata:
-  name: kibana-prd
-  namespace: monitoring
-  labels:
-    app: kibana-prd
-spec:
-  type: NodePort
-  ports:
-  - port: 5601
-    nodePort: 32005
-  selector:
-    app: kibana-prd
----
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -35,3 +20,5 @@ spec:
         env:
           - name: ELASTICSEARCH_URL
             value: "http://elasticsearch-prd:9200"
+          #- name: SERVER_BASEPATH
+          #  value: "kibana-prd"
