@@ -1,6 +1,5 @@
-FROM k8s-registry.zeusis.com:32000/java:8.001
+FROM k8s-registry.zeusis.com:32000/zs/java:8
 MAINTAINER Hellwen <hellwen.wu@gmail.com>
-
 
 # hbase
 ENV HBASE_VERSION 1.2.4
@@ -19,6 +18,8 @@ RUN yum install -y wget && \
 
 COPY entrypoint.sh /
 COPY hbase-site.xml $HBASE_HOME/conf/
+
+VOLUME /data
 
 RUN mkdir -p /data/hbase && \
     mkdir -p /data/zookeeper

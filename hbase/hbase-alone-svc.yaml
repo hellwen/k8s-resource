@@ -1,0 +1,22 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: hbase
+  namespace: default
+  labels:
+    app: hbase
+spec:
+  type: NodePort
+  ports:
+  #- port: 8088
+  #  name: yarn
+  - port: 16010
+    name: hbase-master
+    nodePort: 31010
+  - port: 9090
+    name: hbase-thrift
+    nodePort: 31011
+  #- port: 16201
+  #  name: hbase-rest
+  selector:
+    app: hbase

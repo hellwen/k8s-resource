@@ -1,0 +1,28 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: hbase-sync-pvc
+  namespace: default
+  labels:
+    kubernetes.io/cluster-service: "true"
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100G
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: default-hbase-sync-pvc
+  labels:
+    kubernetes.io/cluster-service: "true"
+spec:
+  capacity:
+    storage: 100G
+  accessModes:
+    - ReadWriteOnce
+  nfs:
+    server: 192.168.72.157
+    path: "/data/hbase-sync-pv"

@@ -1,0 +1,14 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: testpage
+  namespace: default
+  labels:
+    type: testpage
+spec:
+  type: NodePort
+  ports:
+  - port: 8080
+    nodePort: 21000
+  selector:
+    type: testpage

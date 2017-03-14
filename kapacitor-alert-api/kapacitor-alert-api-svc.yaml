@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: kapacitor-alert-api
+  namespace: monitoring
+spec:
+  ports:
+  - name: http
+    port: 3000
+  selector:
+    app: kapacitor-alert-api

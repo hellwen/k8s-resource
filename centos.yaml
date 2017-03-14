@@ -3,6 +3,7 @@ kind: Pod
 metadata:
   name: centos
 spec:
+  serviceAccountName: k8s-sa
   containers:
   - name: centos
     image: k8s-registry.zeusis.com:32000/centos:7

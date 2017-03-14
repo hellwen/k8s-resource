@@ -1,7 +1,7 @@
 all: push
 
-TAG = 8-ubuntu.001
-PREFIX = k8s-registry.zeusis.com:32000/java
+TAG = 8-ubuntu
+PREFIX = k8s-registry.zeusis.com:32000/zs/java
 
 container:
 	docker build -t $(PREFIX):$(TAG) .

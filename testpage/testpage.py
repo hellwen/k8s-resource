@@ -20,7 +20,7 @@ import os
 
 class RequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 
-    Page = 'I am1: %s, the version is: %s' % (get_ip_address('eth0'), os.environ.get('VERSION'))
+    Page = 'I am: %s, the version is: %s\n' % (get_ip_address('eth0'), os.environ.get('VERSION'))
 
     def do_GET(self):
         self.send_response(200)
