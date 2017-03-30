@@ -1,0 +1,22 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: kibana-prd
+  namespace: monitoring
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: kibana-prd
+    spec:
+      containers:
+      - name: kiabana
+        image: k8s-registry.zeusis.com:32000/kibana:5.2.2
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 2000Mi
+        env:
+          - name: ELASTICSEARCH_URL
+            value: "http://elasticsearch-prd:9200"

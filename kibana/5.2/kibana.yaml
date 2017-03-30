@@ -1,0 +1,43 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: kibana
+  namespace: monitoring
+  labels:
+    app: kibana
+spec:
+  type: NodePort
+  ports:
+  - port: 5601
+    nodePort: 32009
+  selector:
+    app: kibana
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: kibana
+  namespace: monitoring
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: kibana
+    spec:
+      containers:
+      - name: kiabana
+        image: k8s-registry.zeusis.com:32000/kibana:5.2.2
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 2000Mi
+        env:
+          - name: ELASTICSEARCH_URL
+            value: "http://elasticsearch:9200"
+          # - name: XPACK_MONITORING_ENABLED
+          #   value: "false"
+          # - name: XPACK_MONITORING_UI_CONTAINER_ELASTICSEARCH_ENABLED
+          #  value: "false"
+          - name: XPACK_SECURITY_ENABLED
+            value: "false"
