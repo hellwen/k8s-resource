@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
       - name: kapacitor-alert-api
-        image: k8s-registry.zeusis.com:32000/zs/kapacitor-alert-api:1.1
+        image: k8s-registry.zeusis.com:32000/zs/kapacitor-alert-api:1.2
         imagePullPolicy: Always
         env:
         - name: MSG_URL

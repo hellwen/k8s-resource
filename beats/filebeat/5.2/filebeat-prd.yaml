@@ -2,7 +2,7 @@ apiVersion: extensions/v1beta1
 kind: DaemonSet
 metadata:
   name: filebeat
-  namespace: monitoring
+  namespace: mon
   labels:
     app: filebeat
 spec:

@@ -1,0 +1,31 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: cm-test
+  labels:
+    app: cm
+    module: test
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: cm
+        module: test
+    spec:
+      containers:
+      - image: k8s-registry.zeusis.com:32000/busybox
+        command:
+          - sleep
+          - "3600"
+        name: cm-test
+        volumeMounts:
+        - mountPath: /etc/config
+          name: config
+      volumes:
+      - name: config
+        configMap:
+          name: cm-test
+          items:
+          - key: config
+            path: app.conf
