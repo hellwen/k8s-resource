@@ -1,0 +1,39 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: telegraf-kubernetes-api
+  namespace: mon
+  labels:
+    app: telegraf
+    module: kubernetes-api
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: telegraf
+        module: kubernetes-api
+    spec:
+      imagePullSecrets:
+        - name: registrykey
+      containers:
+        - name: telegraf-kubernetes-api
+          image: k8s-registry.zeusis.com:32000/zs/telegraf:1.2-kube
+          imagePullPolicy: Always
+          env:
+          - name: POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: NODE_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: spec.nodeName
+          - name: INFLUXDB_URLS
+            value: "http://139.199.73.164:32003/"
+          - name: INFLUXDB_DATABASE
+            value: "kubernetes"
+          - name: ENABLE_KUBERNETES_API
+            value: "true"
+          - name: ENABLE_KUBE_STATE_METRICS
+            value: "true"

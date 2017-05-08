@@ -1,0 +1,6 @@
+# Derived from ./manifests
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: monitoring

@@ -10,8 +10,10 @@ metadata:
   name: kapacitor-prd
   namespace: monitoring
 spec:
+  type: NodePort
   ports:
   - name: http
     port: 9092
+    nodePort: 32011
   selector:
     k8s-app: kapacitor-prd

@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
       - name: elasticsearch
-        image: k8s-registry.zeusis.com:32000/zs/elasticsearch:5.1-alone
+        image: k8s-registry.zeusis.com:32000/zs/elasticsearch:5.2-alone
         imagePullPolicy: Always
         resources:
           limits:

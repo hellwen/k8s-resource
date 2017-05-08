@@ -19,7 +19,7 @@ spec:
         resources:
           limits:
             cpu: 50m
-            memory: 50Mi
+            memory: 200Mi
         env:
           - name: ELASTICSEARCH_HOSTS
             value: "192.168.61.2:32004"

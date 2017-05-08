@@ -1,20 +1,8 @@
-apiVersion: v1
-kind: Service
-metadata:
-  name: kapacitor
-  namespace: default
-spec:
-  ports:
-  - name: http
-    port: 9092
-  selector:
-    app: kapacitor
----
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: kapacitor
-  namespace: default
+  namespace: monitoring
 spec:
   replicas: 1
   template:

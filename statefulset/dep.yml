@@ -1,0 +1,16 @@
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: sfs
+spec:
+  serviceName: "sfs"
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: sfs
+    spec:
+      containers:
+      - name: sfs
+        image: k8s-registry.zeusis.com:32000/test:1
+        imagePullPolicy: Always

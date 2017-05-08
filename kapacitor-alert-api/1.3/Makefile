@@ -1,6 +1,6 @@
 all: push
 
-TAG = 0.1
+TAG = 1.3
 PREFIX = k8s-registry.zeusis.com:32000/zs/kapacitor-alert-api
 
 container:

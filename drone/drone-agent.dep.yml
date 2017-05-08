@@ -1,0 +1,35 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: drone-agent
+  namespace: default
+  labels:
+    app: drone
+    role: agent
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: drone
+        role: agent
+    spec:
+      containers:
+      - image: k8s-registry.zeusis.com:32000/drone:0.5
+        name: drone-agent
+        resources:
+          limits:
+            cpu: 100m
+            memory: 100Mi
+        env:
+        - name: DRONE_SERVER
+          value: "ws://127.0.0.1:80/ws/broker"
+        - name: DRONE_SECRET
+          value: "myselfkey"
+        volumeMounts:
+        - mountPath: /var/run/docker.sock
+          name: docker
+      volumes:
+      - name: docker
+        hostPath:
+          path: /var/run/docker.sock

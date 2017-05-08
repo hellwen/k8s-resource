@@ -20,3 +20,11 @@ spec:
             value: "http://influxdb-prd:8086"
           - name: KAPACITOR_HOSTNAME
             value: kapacitor-prd
+        volumeMounts:
+        - mountPath: /var/lib/kapacitor
+          name: kapacitor-storage
+      volumes:
+      - name: kapacitor-storage
+        persistentVolumeClaim:
+          claimName: kapacitor-storage-pvc-prd
+

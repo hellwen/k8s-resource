@@ -1,0 +1,136 @@
+# Global tags can be specified here in key="value" format.
+[global_tags]
+  # dc = "us-east-1" # will tag all metrics with dc=us-east-1
+  # user = "$USER"
+
+{{ if .GLOBAL_TAGS }}
+  {{ range $index, $item := split "," .GLOBAL_TAGS }}
+    {{ $value := split ":" $item }}{{ $value._0 }}={{ $value._1 | quote }}
+  {{end}}
+{{ end }}
+
+# Configuration for telegraf agent
+[agent]
+  ## Default data collection interval for all inputs
+  interval = "10s"
+  ## Rounds collection interval to 'interval'
+  ## ie, if interval="10s" then always collect on :00, :10, :20, etc.
+  round_interval = true
+
+  ## Telegraf will send metrics to outputs in batches of at most
+  ## metric_batch_size metrics.
+  ## This controls the size of writes that Telegraf sends to output plugins.
+  metric_batch_size = 1000
+
+  ## For failed writes, telegraf will cache metric_buffer_limit metrics for each
+  ## output, and will flush this buffer on a successful write. Oldest metrics
+  ## are dropped first when this buffer fills.
+  ## This buffer only fills when writes fail to output plugin(s).
+  metric_buffer_limit = 10000
+
+  ## Collection jitter is used to jitter the collection by a random amount.
+  ## Each plugin will sleep for a random time within jitter before collecting.
+  ## This can be used to avoid many plugins querying things like sysfs at the
+  ## same time, which can have a measurable effect on the system.
+  collection_jitter = "0s"
+
+  ## Default flushing interval for all outputs. You shouldn't set this below
+  ## interval. Maximum flush_interval will be flush_interval + flush_jitter
+  flush_interval = "10s"
+  ## Jitter the flush interval by a random amount. This is primarily to avoid
+  ## large write spikes for users running a large number of telegraf instances.
+  ## ie, a jitter of 5s and interval 10s means flushes will happen every 10-15s
+  flush_jitter = "0s"
+
+  ## By default, precision will be set to the same timestamp order as the
+  ## collection interval, with the maximum being 1s.
+  ## Precision will NOT be used for service inputs, such as logparser and statsd.
+  ## Valid values are "ns", "us" (or "µs"), "ms", "s".
+  precision = ""
+
+  ## Logging configuration:
+  ## Run telegraf with debug log messages.
+  debug = {{ default false .AGENT_DEBUG }}
+  ## Run telegraf in quiet mode (error log messages only).
+  quiet = {{ default false .AGENT_QUIET }}
+  ## Specify the log file name. The empty string means to log to stderr.
+  logfile = ""
+
+  ## Override default hostname, if empty use os.Hostname()
+  hostname = ""
+  ## If set to true, do no set the "host" tag in the telegraf agent.
+  omit_hostname = false
+
+
+###############################################################################
+#                            OUTPUT PLUGINS                                   #
+###############################################################################
+
+{{ if .INFLUXDB_URLS}}
+[[outputs.influxdb]]
+  urls = [{{ .INFLUXDB_URLS }}]
+  database = {{default "kubernetes" .INFLUXDB_DATABASE | quote }}
+  timeout = {{ default "5s" .INFLUXDB_TIMEOUT | quote }}
+  {{ if .INFLUXDB_USERNAME}} username = {{ .INFLUXDB_USERNAME | quote }} {{ end }}
+  {{ if .INFLUXDB_PASSWORD}} password = {{ .INFLUXDB_PASSWORD | quote }} {{ end }}
+  {{ if .INFLUXDB_USER_AGENT}} user_agent = {{ .INFLUXDB_USER_AGENT | quote }} {{ end }}
+  {{ if .INFLUXDB_UDP_PAYLOAD}} udp_payload = {{ .INFLUXDB_UDP_PAYLOAD | quote }} {{ end }}
+{{ end }}
+
+###############################################################################
+#                            INPUT PLUGINS                                    #
+###############################################################################
+
+{{ if and .ENABLE_KUBERNETES }}
+# Read metrics about cpu usage
+[[inputs.cpu]]
+  percpu = true
+  totalcpu = true
+  collect_cpu_time = false
+
+[[inputs.kernel]]
+[[inputs.mem]]
+[[inputs.swap]]
+[[inputs.system]]
+[[inputs.netstat]]
+[[inputs.disk]]
+  ignore_fs = ["tmpfs", "devtmpfs"]
+[[inputs.diskio]]
+[[inputs.net]]
+{{ end }}
+
+{{ if and .KUBERNETES_URL .ENABLE_KUBERNETES }}
+[[inputs.kubernetes]]
+  url = {{ default "http://1.1.1.1:10255" .KUBERNETES_URL | quote }}
+  bearer_token = {{ .KUBERNETES_BEARER_TOKEN_PATH | quote }}
+  insecure_skip_verify = {{ default true .KUBERNETES_INSECURE_SKIP_VERIFY }}
+  {{ if .KUBERNETES_SSL_CA }} ssl_ca = {{ .KUBERNETES_SSL_CA | quote }} {{ end }}
+  {{ if .KUBERNETES_SSL_CERT }} ssl_cert = {{ .KUBERNETES_SSL_CERT | quote }} {{ end }}
+  {{ if .KUBERNETES_SSL_KEY }} ssl_key = {{ .KUBERNETES_SSL_KEY | quote }} {{ end }}
+{{ end }}
+
+{{ if and .KUBERNETES_API_URLS .ENABLE_KUBERNETES_API }}
+[[inputs.prometheus]]
+  urls = [{{ .KUBERNETES_API_URLS }}]
+  insecure_skip_verify = {{ default true .KUBERNETES_API_INSECURE_SKIP_VERIFY }}
+  bearer_token = {{ .KUBERNETES_API_BEARER_TOKEN_PATH | quote }}
+{{ end }}
+
+{{ if and .KUBE_STATE_METRICS_URLS .ENABLE_KUBE_STATE_METRICS }}
+[[inputs.prometheus]]
+  urls = [{{ .KUBE_STATE_METRICS_URLS }}]
+  insecure_skip_verify = {{ default true .KUBE_STATE_METRICS_INSECURE_SKIP_VERIFY }}
+  bearer_token = {{ .KUBE_STATE_METRICS_BEARER_TOKEN_PATH | quote }}
+{{ end }}
+
+{{ if and .PROMETHEUS_URLS .ENABLE_PROMETHEUS }}
+[[inputs.prometheus]]
+  urls = [{{ .PROMETHEUS_URLS }}]
+  insecure_skip_verify = {{ default true .PROMETHEUS_INSECURE_SKIP_VERIFY }}
+  bearer_token = {{ .PROMETHEUS_BEARER_TOKEN_PATH | quote }}
+{{ end }}
+
+{{ if .ENABLE_ETCD }}
+[[inputs.prometheus]]
+  urls = [{{ .ETCD_URLS }}]
+{{ end }}

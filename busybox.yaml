@@ -4,10 +4,13 @@ metadata:
   name: busybox
 spec:
   containers:
+  # - image: reg.zeusis.com/test/busybox
   - image: k8s-registry.zeusis.com:32000/busybox
+    imagePullPolicy: IfNotPresent
+    name: busybox
     command:
       - sleep
       - "3600"
-    imagePullPolicy: IfNotPresent
-    name: busybox
   restartPolicy: Always
+  # imagePullSecrets:
+  #   - name: myregistrykey

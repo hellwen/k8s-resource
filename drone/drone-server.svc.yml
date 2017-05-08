@@ -12,3 +12,4 @@ spec:
     nodePort: 32010
   selector:
     app: drone
+    role: server
