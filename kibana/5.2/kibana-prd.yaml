@@ -19,4 +19,4 @@ spec:
             memory: 2000Mi
         env:
           - name: ELASTICSEARCH_URL
-            value: "http://elasticsearch-prd:9200"
+            value: "http://192.168.10.46:9210"

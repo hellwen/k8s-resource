@@ -1,9 +1,3 @@
-# Derived from ./manifests
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: monitoring
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment

@@ -12,9 +12,15 @@ spec:
     spec:
       containers:
       - name: kube-state-metrics
-        image: batazor/kube-state-metrics:0.4.1
-        ports:
-        - containerPort: 8080
+        # image: apsm/kube-state-metrics:v0.5.0
+        image: k8s-registry.zeusis.com:32000/kube-state-metrics:v0.5.0
+        resources:
+          requests:
+            cpu: 15m
+            memory: 100M 
+          limits:
+            cpu: 15m
+            memory: 100M
 ---
 apiVersion: v1
 kind: Service

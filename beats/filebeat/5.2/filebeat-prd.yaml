@@ -18,11 +18,11 @@ spec:
         imagePullPolicy: Always
         resources:
           limits:
-            cpu: 50m
-            memory: 200Mi
+            cpu: 200m
+            memory: 500Mi
         env:
           - name: ELASTICSEARCH_HOSTS
-            value: "192.168.61.2:32004"
+            value: "192.168.10.46:9210"
           - name: LOG_LEVEL
             value: info
           - name: ELASTICSEARCH_INDEX
