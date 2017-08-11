@@ -1,0 +1,89 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: alertmanager
+  namespace: mon
+  labels:
+    app: prometheus
+    role: alertmanager.yml
+data:
+  alertmanager.yml: |
+    global:
+      # The smarthost and SMTP sender used for mail notifications.
+      smtp_smarthost: 'mail1.yulong.com:587'
+      smtp_from: 'dean.wu@coolpad.com'
+      smtp_auth_username: 'Dean.Wu'
+      smtp_auth_password: '1q2w3e4r5t@'
+    
+    # The directory from which notification templates are read.
+    templates: 
+    - '/etc/alertmanager/template/*.tmpl'
+    
+    # The root route on which each incoming alert enters.
+    route:
+      # The labels by which incoming alerts are grouped together. For example,
+      # multiple alerts coming in for cluster=A and alertname=LatencyHigh would
+      # be batched into a single group.
+      group_by: ['alertname', 'cluster', 'service']
+    
+      # When a new group of alerts is created by an incoming alert, wait at
+      # least 'group_wait' to send the initial notification.
+      # This way ensures that you get multiple alerts for the same group that start
+      # firing shortly after another are batched together on the first 
+      # notification.
+      group_wait: 30s
+    
+      # When the first notification was sent, wait 'group_interval' to send a batch
+      # of new alerts that started firing for that group.
+      group_interval: 5m
+    
+      # If an alert has successfully been sent, wait 'repeat_interval' to
+      # resend them.
+      repeat_interval: 3h 
+    
+      # A default receiver
+      receiver: testapi
+    
+      # All the above attributes are inherited by all child routes and can 
+      # overwritten on each.
+    
+      # The child route trees.
+      routes:
+      # This routes performs a regular expression match on alert labels to
+      # catch alerts that are related to a list of services.
+      - match_re:
+          service: k8s
+        receiver: testapi
+    
+    # Inhibition rules allow to mute a set of alerts given that another alert is
+    # firing.
+    # We use this to mute any warning-level notifications if the same alert is 
+    # already critical.
+    inhibit_rules:
+    - source_match:
+        severity: 'critical'
+      target_match:
+        severity: 'warning'
+      # Apply inhibition if the alertname is the same.
+      equal: ['alertname', 'cluster', 'service']
+    
+    receivers:
+    #- name: 'myself'
+    #  email_configs:
+    #  - to: 'hellwen@dingtalk.com'
+    - name: 'test'
+      webhook_configs:
+      - url: 'http://192.168.61.2:8080/api/alert/7'
+        send_resolved: true
+
+    - name: 'testapi'
+      webhook_configs:
+      - url: 'http://prometheus-alert-api/api/alert/7'
+        send_resolved: true
+
+    - name: 'opsapi'
+      webhook_configs:
+      - url: 'http://prometheus-alert-api/api/alert/ops'
+        send_resolved: true
+

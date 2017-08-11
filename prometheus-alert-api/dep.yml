@@ -1,0 +1,20 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: prometheus-alert-api
+  namespace: mon
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: prometheus-alert-api
+    spec:
+      containers:
+      - name: prometheus-alert-api
+        image: k8s-registry.zeusis.com:32000/zs/prometheus-alert-api:v1.3.10
+        imagePullPolicy: Always
+        env:
+        - name: MSG_URL
+          value: "https://oapi.dingtalk.com/robot/send?access_token=f3e4ba2d28e282518b44eafb45761e1f237f70f2af4cc77db4cfde838101f5a5"
+          # value: "http://monitor.zeusis.com:8082/alarm/send"
